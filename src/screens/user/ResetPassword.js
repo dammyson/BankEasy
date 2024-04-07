@@ -2,7 +2,6 @@ import React, {useState} from 'react';
 import {
   Text,
   StyleSheet,
-  Image,
   View,
   TextInput,
   TouchableOpacity,
@@ -12,77 +11,86 @@ import {
 import {lightTheme} from '../../theme/colors';
 import {useNavigation} from '@react-navigation/native';
 import {Icon} from '@rneui/themed';
-import {logo, signin, user_check, user_rate} from '../../assets/images';
 import {buttonStyles} from '../../theme/ButtonStyle';
 import {font} from '../../constants';
-import {Container, Body, Button, Left, Content} from 'native-base';
-import CodeInput from '../../components/CodeInput';
+import {Container, Content} from 'native-base';
 import {textInputStyles} from '../../theme/TextInputStyle';
-import Checkbox from '../../components/CheckBox';
 
-const SignIn = ({route}) => {
+const ResetPassword = ({route}) => {
   const navigation = useNavigation();
-  const [firstName, setFirstName] = useState('');
-  const [checked, setChecked] = useState(false);
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
   return (
     <Container>
       <StatusBar backgroundColor="transparent" barStyle="dark-content" />
-
-      <Image
-        style={{
-          height: Dimensions.get('window').height / 3,
-          width: Dimensions.get('window').width,
-        }}
-        source={signin}
-      />
       <Content>
         <View style={styles.container}>
           <View
             style={{
-              marginLeft: 20,
-              marginRight: 20,
-              justifyContent: 'center',
-              alignItems: 'center',
-              marginBottom: 15,
-              marginTop: 20,
+              flexDirection: 'row',
+              marginBottom: 10,
+              marginHorizontal: 20,
+              backgroundColor: lightTheme.WHITE_COLOR,
+              marginTop: 10,
             }}>
-            <Text
+            <View
               style={{
-                color: lightTheme.BLACK_TEXT_COLOR,
-                fontFamily: font.BOLD,
-                fontSize: 24,
-                marginBottom: 2,
-                marginTop: 2,
+                justifyContent: 'center',
+                paddingRight: 5,
+                marginRight: 5,
               }}>
-              Welcome!
-            </Text>
+              <TouchableOpacity
+                onPress={() => navigation.goBack()}
+                style={{justifyContent: 'center', width: 30}}>
+                <Icon
+                  active
+                  name="left"
+                  type="antdesign"
+                  size={22}
+                  color={lightTheme.BLACK_TEXT_COLOR}
+                />
+              </TouchableOpacity>
+            </View>
+            <View style={{flex: 1}}>
+              <Text
+                style={{
+                  color: lightTheme.BLACK_TEXT_COLOR,
+                  fontFamily: font.BOLD,
+                  fontSize: 22,
+                  marginBottom: 2,
+                }}>
+                Reset password
+              </Text>
+            </View>
+          </View>
+
+          <View style={{flex: 1}}>
             <Text
               style={{
                 color: lightTheme.BLACK_TEXT_COLOR,
                 fontFamily: font.REGULAR,
                 fontSize: 16,
-                marginBottom: 2,
-                marginTop: 10,
+                marginBottom: 20,
+                marginTop: 30,
+                marginLeft: 20,
+                marginRight: 20,
               }}>
-              Enjoy easy banking by signing In
+              Enter the phone number tied to your account to reset your password
             </Text>
-          </View>
-
-          <View style={{flex: 1}}>
             <View
               style={{
                 marginLeft: 20,
                 marginRight: 20,
                 justifyContent: 'flex-start',
               }}>
-              <Text style={styles.inputLabel}>Email/Phone Number </Text>
+              <Text style={styles.inputLabel}>Create Password </Text>
             </View>
 
             <View style={styles.textInputContainer}>
               <View style={styles.input}>
                 <TextInput
-                  placeholder="Enter your Email or Phone Number "
+                  placeholder="Enter a new password"
                   placeholderTextColor={lightTheme.PRIMARY_TEXT_COLOR}
                   returnKeyType="next"
                   keyboardType="default"
@@ -94,45 +102,7 @@ const SignIn = ({route}) => {
                     color: lightTheme.PRIMARY_TEXT_COLOR,
                     fontFamily: font.REGULAR,
                   }}
-                  onChangeText={text => setFirstName(text)}
-                  onSubmitEditing={() => console.warn('')}
-                />
-              </View>
-              <View style={textInputStyles.operation_icon}>
-                <Icon
-                  name="phone-outline"
-                  type="material-community"
-                  color="grey"
-                  size={20}
-                />
-              </View>
-            </View>
-
-            <View
-              style={{
-                marginLeft: 20,
-                marginRight: 20,
-                justifyContent: 'flex-start',
-              }}>
-              <Text style={styles.inputLabel}>Password </Text>
-            </View>
-
-            <View style={styles.textInputContainer}>
-              <View style={styles.input}>
-                <TextInput
-                  placeholder="Enter your Password"
-                  placeholderTextColor={lightTheme.PRIMARY_TEXT_COLOR}
-                  returnKeyType="next"
-                  keyboardType="default"
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  style={{
-                    flex: 1,
-                    fontSize: 14,
-                    color: lightTheme.PRIMARY_TEXT_COLOR,
-                    fontFamily: font.REGULAR,
-                  }}
-                  onChangeText={text => setFirstName(text)}
+                  onChangeText={text => setPassword(text)}
                   onSubmitEditing={() => console.warn('')}
                 />
               </View>
@@ -147,23 +117,40 @@ const SignIn = ({route}) => {
             </View>
             <View
               style={{
-                marginRight: 20,
                 marginLeft: 20,
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'space-between',
+                marginRight: 20,
+                justifyContent: 'flex-start',
               }}>
-              <Checkbox
-                isChecked={checked}
-                text="Remember password"
-                onPress={() => setChecked(!checked)}
-              />
-              <TouchableOpacity
-                onPress={() => navigation.navigate('ForgotPassword')}>
-                <Text style={{color: lightTheme.ORANGE, fontWeight: 500}}>
-                  Forgot Password
-                </Text>
-              </TouchableOpacity>
+              <Text style={styles.inputLabel}>Confirm Password </Text>
+            </View>
+
+            <View style={styles.textInputContainer}>
+              <View style={styles.input}>
+                <TextInput
+                  placeholder="Confirm your new password"
+                  placeholderTextColor={lightTheme.PRIMARY_TEXT_COLOR}
+                  returnKeyType="next"
+                  keyboardType="default"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  style={{
+                    flex: 1,
+                    fontSize: 14,
+                    color: lightTheme.PRIMARY_TEXT_COLOR,
+                    fontFamily: font.REGULAR,
+                  }}
+                  onChangeText={text => setConfirmPassword(text)}
+                  onSubmitEditing={() => console.warn('')}
+                />
+              </View>
+              <View style={textInputStyles.operation_icon}>
+                <Icon
+                  name="eye-outline"
+                  type="material-community"
+                  color="grey"
+                  size={20}
+                />
+              </View>
             </View>
           </View>
 
@@ -174,7 +161,7 @@ const SignIn = ({route}) => {
               marginBottom: 10,
             }}>
             <TouchableOpacity
-              onPress={() => navigation.navigate('Register')}
+              onPress={() => navigation.navigate('SignIn')}
               style={[buttonStyles.primaryButtonStyle]}>
               <Text style={[buttonStyles.primaryActionButtonTextStyle]}>
                 Sign In
@@ -187,7 +174,7 @@ const SignIn = ({route}) => {
   );
 };
 
-export default SignIn;
+export default ResetPassword;
 
 const styles = StyleSheet.create({
   container: {

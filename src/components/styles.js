@@ -1,5 +1,5 @@
 import {StyleSheet, Platform} from 'react-native';
-import { lightTheme } from '../theme/colors';
+import {lightTheme} from '../theme/colors';
 
 export const CELL_SIZE = 50;
 export const CELL_BORDER_RADIUS = 8;
@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   cell: {
-    marginHorizontal: 4,
+    marginHorizontal: 5,
     height: CELL_SIZE,
     width: CELL_SIZE,
     lineHeight: CELL_SIZE - 5,
@@ -25,16 +25,15 @@ const styles = StyleSheet.create({
     borderRadius: CELL_BORDER_RADIUS,
     color: '#3759b8',
     backgroundColor: '#fff',
-    borderColor:lightTheme.OFF_WHITE_COLOR,
-    borderWidth:1,
+    borderColor: lightTheme.OFF_WHITE_COLOR,
+    borderWidth: 1,
 
     // IOS
-  
+
     shadowOffset: {
       width: 0,
       height: 1,
     },
- 
 
     // Android
     elevation: 3,

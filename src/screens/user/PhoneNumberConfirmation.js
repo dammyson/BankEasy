@@ -3,7 +3,6 @@ import {
   Text,
   StyleSheet,
   View,
-  TextInput,
   TouchableOpacity,
   Dimensions,
   StatusBar,
@@ -11,17 +10,15 @@ import {
 import {lightTheme} from '../../theme/colors';
 import {useNavigation} from '@react-navigation/native';
 import {Icon} from '@rneui/themed';
-import {logo, user_check, user_rate} from '../../assets/images';
 import {buttonStyles} from '../../theme/ButtonStyle';
 import {font} from '../../constants';
-import {Container, Body, Button, Left, Content} from 'native-base';
+import {Container, Content} from 'native-base';
 import CodeInput from '../../components/CodeInput';
-import {textInputStyles} from '../../theme/TextInputStyle';
 
-const SignInCode = ({route}) => {
+const PhoneNumberConfirmation = () => {
   const navigation = useNavigation();
-  const [firstName, setFirstName] = useState('');
   const [code, setCode] = useState('');
+  const [counterId, setCounterId] = useState(null);
 
   return (
     <Container>
@@ -59,10 +56,10 @@ const SignInCode = ({route}) => {
                 style={{
                   color: lightTheme.BLACK_TEXT_COLOR,
                   fontFamily: font.BOLD,
-                  fontSize: 22,
+                  fontSize: 20,
                   marginBottom: 2,
                 }}>
-                Sign in
+                Confirm your Phone Number
               </Text>
             </View>
           </View>
@@ -78,65 +75,17 @@ const SignInCode = ({route}) => {
             <Text
               style={{
                 color: lightTheme.BLACK_TEXT_COLOR,
-                fontFamily: font.BOLD,
-                fontSize: 28,
-                marginBottom: 2,
-                marginTop: 2,
-              }}>
-              Use invitation code
-            </Text>
-            <Text
-              style={{
-                color: lightTheme.BLACK_TEXT_COLOR,
                 fontFamily: font.REGULAR,
                 fontSize: 16,
                 marginBottom: 2,
                 marginTop: 10,
               }}>
-              Enter the invitation code you have received below to continue
-              signing in to your account
+              An OTP has been sent to your number ending in *4568 enter it to
+              reset your password
             </Text>
           </View>
 
           <View style={{flex: 1}}>
-            <View
-              style={{
-                marginLeft: 20,
-                marginRight: 20,
-                justifyContent: 'flex-start',
-                marginBottom: 5,
-              }}>
-              <Text style={styles.inputLabel}>Phone Number </Text>
-            </View>
-
-            <View style={styles.textInputContainer}>
-              <View style={styles.input}>
-                <TextInput
-                  placeholder="Enter your Phone Number "
-                  placeholderTextColor={lightTheme.PRIMARY_TEXT_COLOR}
-                  returnKeyType="next"
-                  keyboardType="default"
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  style={{
-                    flex: 1,
-                    fontSize: 14,
-                    color: lightTheme.PRIMARY_TEXT_COLOR,
-                    fontFamily: font.REGULAR,
-                  }}
-                  onChangeText={text => setFirstName(text)}
-                  onSubmitEditing={() => console.warn('')}
-                />
-              </View>
-              <View style={textInputStyles.operation_icon}>
-                <Icon
-                  name="phone-outline"
-                  type="material-community"
-                  color="grey"
-                  size={20}
-                />
-              </View>
-            </View>
             <View
               style={{
                 marginLeft: 20,
@@ -149,35 +98,43 @@ const SignInCode = ({route}) => {
             <View style={{}}>
               <CodeInput onChangeText={txt => setCode(txt)} />
             </View>
-          </View>
-          <View
-            style={{
-              marginLeft: 20,
-              marginRight: 20,
-              justifyContent: 'center',
-              alignItems: 'flex-start',
-              marginBottom: 10,
-            }}>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('SignUP')}
-              style={{alignItems: 'flex-start'}}>
-              <Text
+            <View
+              style={{
+                marginRight: 20,
+                marginLeft: 20,
+                marginTop: 10,
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}>
+              <TouchableOpacity onPress={() => setCounterId(2 * Math.random())}>
+                <Text
+                  style={{
+                    color: lightTheme.ORANGE,
+                    fontWeight: 500,
+                    textDecorationLine: 'underline',
+                  }}>
+                  Resend OTP
+                </Text>
+              </TouchableOpacity>
+              <View
                 style={{
-                  color: lightTheme.PRIMARY_TEXT_COLOR,
-                  fontFamily: font.REGULAR,
-                  fontSize: 15,
-                  marginTop: 7,
+                  display: 'flex',
+                  flexDirection: 'row',
+                  alignItems: 'center',
                 }}>
-                Don’t have an account ?{' '}
-              </Text>
-            </TouchableOpacity>
+                <Text style={{color: '#DADADA', fontWeight: 500, fontSize: 16}}>
+                  Expires in
+                </Text>
+              </View>
+            </View>
           </View>
           <View style={{marginLeft: 20, marginRight: 20, marginBottom: 10}}>
             <TouchableOpacity
-              onPress={() => navigation.navigate('Register')}
+              onPress={() => navigation.navigate('ResetPassword')}
               style={[buttonStyles.primaryButtonStyle]}>
               <Text style={[buttonStyles.primaryActionButtonTextStyle]}>
-                Sign Up
+                Enter
               </Text>
             </TouchableOpacity>
           </View>
@@ -187,7 +144,7 @@ const SignInCode = ({route}) => {
   );
 };
 
-export default SignInCode;
+export default PhoneNumberConfirmation;
 
 const styles = StyleSheet.create({
   container: {
