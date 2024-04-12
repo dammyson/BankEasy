@@ -174,10 +174,10 @@ const SignInCode = ({route}) => {
           </View>
           <View style={{marginLeft: 20, marginRight: 20, marginBottom: 10}}>
             <TouchableOpacity
-              onPress={() => navigation.navigate('Register')}
+              onPress={() => navigation.navigate('SignIn')}
               style={[buttonStyles.primaryButtonStyle]}>
               <Text style={[buttonStyles.primaryActionButtonTextStyle]}>
-                Sign Up
+                Sign In
               </Text>
             </TouchableOpacity>
           </View>

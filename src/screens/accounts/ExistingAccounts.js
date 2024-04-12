@@ -12,9 +12,8 @@ import {lightTheme} from '../../theme/colors';
 import {useNavigation} from '@react-navigation/native';
 import {Icon} from '@rneui/themed';
 import {buttonStyles} from '../../theme/ButtonStyle';
-import {font} from '../../constants';
+import {accounts, font} from '../../constants';
 import {Container, Content} from 'native-base';
-import {homly, monie_point} from '../../assets/images';
 
 const ExistingAccounts = () => {
   const navigation = useNavigation();
@@ -129,19 +128,6 @@ const ExistingAccounts = () => {
 };
 
 export default ExistingAccounts;
-
-const accounts = [
-  {
-    name: 'Moniepoint Microfinance Bank',
-    type: 'Saving account',
-    img: monie_point,
-  },
-  {
-    name: 'Homly',
-    type: 'Current account',
-    img: homly,
-  },
-];
 
 const styles = StyleSheet.create({
   container: {

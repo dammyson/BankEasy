@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-
 import Splash from '../screens/onBoarding/Splash';
 import Welcome from '../screens/onBoarding/Welcome';
 import SignInCode from '../screens/user/Login';
@@ -10,6 +9,7 @@ import ForgotPassword from '../screens/user/ForgotPassword';
 import PhoneNumberConfirmation from '../screens/user/PhoneNumberConfirmation';
 import ResetPassword from '../screens/user/ResetPassword';
 import ExistingAccounts from '../screens/accounts/ExistingAccounts';
+import BottomTab from '../screens/TabsNavigation';
 
 const Stack = createStackNavigator();
 
@@ -34,6 +34,7 @@ const Route = () => {
         />
         <Stack.Screen name="ResetPassword" component={ResetPassword} />
         <Stack.Screen name="ExistingAccounts" component={ExistingAccounts} />
+        <Stack.Screen name="Home" component={BottomTab} />
       </Stack.Navigator>
     </NavigationContainer>
   );

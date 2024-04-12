@@ -20,12 +20,12 @@ export const buttonStyles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: lightTheme.SECONDARY_COLOR,
     borderColor: lightTheme.SECONDARY_COLOR,
-    borderWidth: 2
+    borderWidth: 2,
   },
   primaryButtonTextStyle: {
     fontFamily: font.BOLD,
     fontSize: 14,
-    color: lightTheme.PRIMARY_COLOR
+    color: lightTheme.PRIMARY_COLOR,
   },
   primaryActionButtonStyle: {
     height: 45,
@@ -37,11 +37,11 @@ export const buttonStyles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: lightTheme.PRIMARY_COLOR,
     borderColor: lightTheme.PRIMARY_COLOR,
-    borderWidth: 2
+    borderWidth: 2,
   },
   primaryActionButtonTextStyle: {
     fontFamily: font.BOLD,
     fontSize: 16,
-    color: lightTheme.WHITE_COLOR
-  }  
-  });
+    color: lightTheme.WHITE_COLOR,
+  },
+});

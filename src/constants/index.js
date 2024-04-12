@@ -1,4 +1,5 @@
 import {Dimensions} from 'react-native';
+import {banji, bunmi, homly, monie_point} from '../assets/images';
 
 export const font = {
   BLACK: 'Montserrat-Black',
@@ -87,3 +88,31 @@ export const sessionExpiredActions = {
   SHOW_EXPIRED: 'SHOW_EXPIRED',
   HIDE_EXPIRED: 'HIDE_EXPIRED',
 };
+
+export const accounts = [
+  {
+    name: 'Moniepoint Microfinance Bank',
+    type: 'Saving account',
+    img: monie_point,
+  },
+  {
+    name: 'Homly',
+    type: 'Current account',
+    img: homly,
+  },
+];
+
+export const transfers = [
+  {
+    name: 'Banji Oyebola',
+    type: 'Bankeasy',
+    img: banji,
+    id: '0921',
+  },
+  {
+    name: 'Bunmi Oluwatobilola',
+    type: 'Other banks',
+    img: bunmi,
+    id: '0032',
+  },
+];

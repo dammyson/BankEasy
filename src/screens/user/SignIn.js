@@ -174,7 +174,7 @@ const SignIn = ({route}) => {
               marginBottom: 10,
             }}>
             <TouchableOpacity
-              onPress={() => navigation.navigate('Register')}
+              onPress={() => navigation.navigate('Home')}
               style={[buttonStyles.primaryButtonStyle]}>
               <Text style={[buttonStyles.primaryActionButtonTextStyle]}>
                 Sign In
