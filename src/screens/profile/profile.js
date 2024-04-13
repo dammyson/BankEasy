@@ -3,16 +3,18 @@ import {
   View,
   Text,
   TouchableOpacity,
-  Dimensions,
   StyleSheet,
   StatusBar,
-  PixelRatio,
+  Image,
+  Dimensions,
 } from 'react-native';
 import {lightTheme} from '../../theme/colors';
 import {font} from '../../constants';
-import {Container} from 'native-base';
+import {Container, Content} from 'native-base';
 import {Icon} from '@rneui/themed';
 import {useNavigation} from '@react-navigation/native';
+import {dark_logo} from '../../assets/images';
+import {List} from './list';
 
 const defaultAuthState = {
   hasLoggedInOnce: false,
@@ -28,159 +30,206 @@ const Profile = () => {
 
   return (
     <Container style={{backgroundColor: lightTheme.WHITE_COLOR}}>
-      <View style={{backgroundColor: lightTheme.WHITE_COLOR, height: 30}} />
+      <View style={{backgroundColor: lightTheme.CREAM, height: 60}} />
       <StatusBar
-        backgroundColor={lightTheme.WHITE_COLOR}
+        backgroundColor={lightTheme.CREAM}
         barStyle="dark-content"
         translucent
       />
       <View
         style={{
           flexDirection: 'row',
-          marginBottom: 10,
-          marginHorizontal: 20,
-          backgroundColor: lightTheme.WHITE_COLOR,
-          marginTop: 25,
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          backgroundColor: lightTheme.CREAM,
+          paddingVertical: 20,
+          paddingHorizontal: 20,
         }}>
         <View
           style={{
             justifyContent: 'center',
-            alignItems: 'center',
             paddingRight: 5,
             marginRight: 5,
           }}>
           <TouchableOpacity
-            style={{
-              height: 50,
-              width: 50,
-              borderRadius: 30,
-              shadowColor: 'gray',
-              backgroundColor: '#cacccb50',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
+            onPress={() => navigation.goBack()}
+            style={{justifyContent: 'center', width: 30}}>
             <Icon
               active
-              name="user"
+              name="left"
               type="antdesign"
               size={22}
               color={lightTheme.BLACK_TEXT_COLOR}
             />
           </TouchableOpacity>
         </View>
-        <View
-          style={{
-            backgroundColor: lightTheme.WHITE_COLOR,
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginBottom: 10,
-            flex: 1,
-          }}>
-          <Text style={{fontFamily: 'Sacramento-Regular', fontSize: 40}}>
-            Hylla-fakjdja
+        <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+          <Text
+            style={{
+              color: lightTheme.BLACK_TEXT_COLOR,
+              fontFamily: font.SEMI_BOLD,
+              fontSize: 22,
+            }}>
+            My account
           </Text>
         </View>
+        <Image
+          style={{height: 32, width: 32, borderRadius: 25}}
+          source={dark_logo}
+        />
       </View>
+      <View>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'center',
+            marginTop: 30,
+          }}>
+          <View
+            style={{
+              backgroundColor: lightTheme.CREAM,
+              width: 120,
+              height: 120,
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center',
+              borderRadius: 60,
+            }}>
+            <Text
+              style={{
+                color: lightTheme.ORANGE,
+                fontSize: 60,
+                fontWeight: 500,
+              }}>
+              DA
+            </Text>
+          </View>
+        </View>
+        <Text
+          style={{
+            textAlign: 'center',
+            fontSize: 16,
+            fontWeight: 400,
+            marginTop: 15,
+          }}>
+          You are signed in as
+        </Text>
+        <Text style={{textAlign: 'center', fontSize: 30, fontWeight: 600}}>
+          Deji Adeyemi
+        </Text>
+      </View>
+      <Content>
+        <View style={styles.container}>
+          <View style={{marginTop: 20, marginHorizontal: 20, marginBottom: 40}}>
+            <View
+              style={{
+                backgroundColor: lightTheme.NEUTRAL_COLOR,
+                borderRadius: 15,
+                marginBottom: 20,
+              }}>
+              {items.top.map(item => (
+                <List item={item} />
+              ))}
+            </View>
+            <View
+              style={{
+                backgroundColor: lightTheme.NEUTRAL_COLOR,
+                borderRadius: 15,
+                marginBottom: 20,
+              }}>
+              {items.biometric.map(item => (
+                <List item={item} />
+              ))}
+            </View>
+            <View
+              style={{
+                backgroundColor: lightTheme.NEUTRAL_COLOR,
+                borderRadius: 15,
+                marginBottom: 20,
+              }}>
+              {items.last.map(item => (
+                <List item={item} />
+              ))}
+            </View>
+          </View>
+        </View>
+      </Content>
     </Container>
   );
 };
 
 export default Profile;
 
+const items = {
+  top: [
+    {
+      name: 'Beneficiaries',
+      icon_name: 'clipboard-text-outline',
+      icon_type: 'material-community',
+      number: '40',
+      page: 'Plan',
+    },
+    {
+      name: 'Reset Pin',
+      icon_name: 'lock-outline',
+      icon_type: 'material',
+      number: '40',
+      page: 'EditProfile',
+    },
+    {
+      name: 'Account details',
+      icon_name: 'user',
+      icon_type: 'feather',
+      number: '35',
+      page: 'Support',
+    },
+    {
+      name: 'Generate statement',
+      icon_name: 'clipboard',
+      icon_type: 'entypo',
+      number: '22',
+      page: 'Privacy',
+    },
+  ],
+  biometric: [
+    {
+      name: 'Biometric login',
+      icon_name: 'car-light-dimmed',
+      icon_type: 'material-community',
+      number: '22',
+      page: 'Terms',
+    },
+    {
+      name: 'Biometric transactions',
+      icon_name: 'scan1',
+      icon_type: 'ant-design',
+      number: '22',
+      page: 'Delete',
+    },
+  ],
+  last: [
+    {
+      name: 'Support',
+      icon_name: 'chat',
+      icon_type: 'material',
+      number: '22',
+      page: 'Delete',
+    },
+    {
+      name: 'Log Out ',
+      icon_name: 'exit-outline',
+      icon_type: 'ionicon',
+      number: '40',
+      page: 'Login',
+    },
+  ],
+};
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFF',
-  },
-  background: {
-    flex: 1,
-    height: Dimensions.get('window').height,
-    width: '100%',
-    backgroundColor: '#fff',
-  },
-  backgroundImage: {
-    width: Dimensions.get('window').width,
-  },
-  logo: {
-    width: 100,
-    height: 100,
-    justifyContent: 'center',
-    resizeMode: 'contain',
-    borderWidth: 1,
-    borderColor: '#cacccb80',
-    borderRadius: 15,
-  },
-  logo_sm: {
-    width: 80,
-    height: 80,
-    justifyContent: 'center',
-    resizeMode: 'contain',
-    borderWidth: 2,
-    borderRadius: 15,
   },
   mainbody: {
     flex: 1,
-  },
-  boxWithShadow: {
-    shadowColor: 'gray',
-    shadowOffset: {width: 0, height: 1},
-    shadowOpacity: 0.8,
-    shadowRadius: 1,
-    elevation: 6, //yoza.ova@ yoza4242
-  },
-  title: {
-    fontFamily: font.BOLD,
-    marginBottom: 10,
-    fontSize: 16,
-  },
-  active: {
-    backgroundColor: lightTheme.WHITE_COLOR,
-    flex: 1,
-    height: 35,
-    borderRadius: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  inactive: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  activetext: {
-    color: lightTheme.PRIMARY_COLOR,
-    fontSize: 14,
-    textAlign: 'left',
-    fontFamily: font.BOLD,
-  },
-  inactivetext: {
-    color: lightTheme.BLACK_TEXT_COLOR,
-    fontSize: 14,
-    textAlign: 'left',
-    fontFamily: font.BOLD,
-  },
-
-  numberContainer: {
-    borderRadius: 20,
-    marginLeft: 10,
-    paddingHorizontal: 7,
-    paddingVertical: 2,
-  },
-  numtext: {
-    fontSize: 14,
-    textAlign: 'left',
-    fontFamily: font.BOLD,
-  },
-  fab: {
-    flexDirection: 'row',
-    paddingHorizontal: 15,
-    height: 60,
-    // width: 60,
-    borderRadius: 200,
-    position: 'absolute',
-    bottom: PixelRatio.get() === 3 ? 90 : 40,
-    right: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: lightTheme.PRIMARY_COLOR,
   },
 });

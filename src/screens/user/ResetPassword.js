@@ -158,7 +158,6 @@ const ResetPassword = ({route}) => {
             style={{
               marginLeft: 20,
               marginRight: 20,
-              marginBottom: 10,
             }}>
             <TouchableOpacity
               onPress={() => navigation.navigate('SignIn')}
@@ -179,7 +178,7 @@ export default ResetPassword;
 const styles = StyleSheet.create({
   container: {
     height:
-      Dimensions.get('window').height - Dimensions.get('window').height / 3,
+      Dimensions.get('window').height - Dimensions.get('window').height / 10,
     width: Dimensions.get('window').width,
     backgroundColor: '#FFF',
   },

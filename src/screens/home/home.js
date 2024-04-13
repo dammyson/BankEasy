@@ -10,11 +10,12 @@ import {
   Image,
 } from 'react-native';
 import {lightTheme} from '../../theme/colors';
-import {font} from '../../constants';
-import {Container} from 'native-base';
+import {font, transferHistory} from '../../constants';
+import {Container, Content} from 'native-base';
 import {Icon} from '@rneui/themed';
 import {useNavigation} from '@react-navigation/native';
 import {monie_point, no_transaction} from '../../assets/images';
+import {TransferList} from './transferList';
 
 const defaultAuthState = {
   hasLoggedInOnce: false,
@@ -143,7 +144,9 @@ const Home = () => {
       <View style={styles.transferContainer}>
         <View style={styles.transferHeader}>
           <Text style={{fontSize: 18, fontWeight: 600}}>Transfer History</Text>
-          <View style={{flexDirection: 'row', alignItems: 'center', gap: 2}}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('TransactionHistory')}
+            style={{flexDirection: 'row', alignItems: 'center', gap: 2}}>
             <Text
               style={{color: lightTheme.ORANGE, fontSize: 14, fontWeight: 600}}>
               See all
@@ -155,28 +158,45 @@ const Home = () => {
               type="antdesign"
               color={lightTheme.ORANGE}
             />
-          </View>
+          </TouchableOpacity>
         </View>
-        <View style={styles.transferTable}>
-          <Image
-            style={{
-              maxWidth: 170,
-              marginHorizontal: 'auto',
-              objectFit: 'contain',
-            }}
-            source={no_transaction}
-          />
-          <Text
-            style={{
-              textAlign: 'center',
-              fontSize: 18,
-              color: lightTheme.NEUTRAL_MAIN,
-              lineHeight: 24,
-            }}>
-            Transactions history is empty. Records of all recent transactions
-            will be listed here.
-          </Text>
-        </View>
+        <Content
+          style={{
+            marginTop: 15,
+            borderTopWidth: 1,
+            borderColor: !transferHistory
+              ? 'transparent'
+              : lightTheme.BORDER_MAIN,
+          }}>
+          {!transferHistory ? (
+            <View style={styles.transferTable}>
+              <Image
+                style={{
+                  maxWidth: 170,
+                  marginHorizontal: 'auto',
+                  objectFit: 'contain',
+                }}
+                source={no_transaction}
+              />
+              <Text
+                style={{
+                  textAlign: 'center',
+                  fontSize: 18,
+                  color: lightTheme.NEUTRAL_MAIN,
+                  lineHeight: 24,
+                }}>
+                Transactions history is empty. Records of all recent
+                transactions will be listed here.
+              </Text>
+            </View>
+          ) : (
+            <View style={{marginBottom: 40}}>
+              {transferHistory.map(item => (
+                <TransferList item={item} />
+              ))}
+            </View>
+          )}
+        </Content>
       </View>
     </Container>
   );
