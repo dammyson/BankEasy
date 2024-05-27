@@ -1,13 +1,13 @@
 import {Text, View} from 'react-native';
 import {lightTheme} from '../../theme/colors';
 
-export const Rows = ({description, boldValue, lightValue}) => {
+export const Rows = ({description, boldValue, lightValue, noBorder}) => {
   return (
     <View
       style={{
         flexDirection: 'column',
         justifyContent: 'center',
-        borderBottomWidth: 1,
+        borderBottomWidth: noBorder ? 0 : 1,
         borderColor: lightTheme.BORDER_MAIN,
         height: 50,
       }}>

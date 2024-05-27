@@ -78,7 +78,8 @@ const TransactionHistory = () => {
         />
       </View>
       <Content style={{marginTop: 20}}>
-        <View style={[styles.container, {marginBottom: 40}]}>
+        <View
+          style={[styles.container, {marginBottom: 40, marginHorizontal: 20}]}>
           {transferHistory.map(item => (
             <TransferList item={item} />
           ))}

@@ -79,7 +79,7 @@ const Welcome = ({route}) => {
                     backgroundColor: '#4A4A4A',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    borderRadius: 10,
+                    borderRadius: 25,
                     marginRight: 8,
                     paddingHorizontal: 7,
                   }}>
@@ -92,7 +92,9 @@ const Welcome = ({route}) => {
                     flex: 1,
                     flexDirection: 'row',
                     paddingVertical: 40,
-                    borderRadius: 10,
+                    borderRadius: 25,
+                    borderColor: lightTheme.BORDER_MAIN,
+                    borderWidth: 1,
                   }}>
                   <View style={{flex: 1, marginLeft: 10}}>
                     <Text style={{fontFamily: font.BOLD, fontSize: 16}}>
@@ -124,6 +126,17 @@ const Welcome = ({route}) => {
                   flexDirection: 'row',
                   marginTop: 20,
                 }}>
+                <View
+                  style={{
+                    backgroundColor: '#4A4A4A',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderRadius: 25,
+                    marginRight: 8,
+                    paddingHorizontal: 7,
+                  }}>
+                  <Image style={{height: 40, width: 40}} source={user_rate} />
+                </View>
                 <TouchableOpacity
                   onPress={() => navigation.navigate('SignInCode')}
                   style={{
@@ -131,7 +144,9 @@ const Welcome = ({route}) => {
                     flex: 1,
                     flexDirection: 'row',
                     paddingVertical: 40,
-                    borderRadius: 10,
+                    borderRadius: 25,
+                    borderWidth: 1,
+                    borderColor: lightTheme.BORDER_MAIN,
                   }}>
                   <View style={{flex: 1, marginLeft: 10}}>
                     <Text style={{fontFamily: font.BOLD, fontSize: 16}}>
@@ -155,18 +170,6 @@ const Welcome = ({route}) => {
                     />
                   </View>
                 </TouchableOpacity>
-
-                <View
-                  style={{
-                    backgroundColor: '#4A4A4A',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    borderRadius: 10,
-                    marginLeft: 8,
-                    paddingHorizontal: 7,
-                  }}>
-                  <Image style={{height: 40, width: 40}} source={user_rate} />
-                </View>
               </View>
             </View>
             <View
@@ -176,37 +179,6 @@ const Welcome = ({route}) => {
                 marginVertical: 20,
               }}
             />
-          </View>
-          <View
-            style={{
-              marginLeft: 20,
-              marginRight: 20,
-              justifyContent: 'center',
-              alignItems: 'flex-start',
-              marginBottom: 10,
-            }}>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('SignUP')}
-              style={{alignItems: 'flex-start'}}>
-              <Text
-                style={{
-                  color: lightTheme.PRIMARY_TEXT_COLOR,
-                  fontFamily: font.REGULAR,
-                  fontSize: 15,
-                  marginTop: 7,
-                }}>
-                Don’t have an account ?{' '}
-              </Text>
-            </TouchableOpacity>
-          </View>
-          <View style={{marginLeft: 20, marginRight: 20, marginBottom: 10}}>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('Register')}
-              style={[buttonStyles.primaryButtonStyle]}>
-              <Text style={[buttonStyles.primaryActionButtonTextStyle]}>
-                Sign Up
-              </Text>
-            </TouchableOpacity>
           </View>
         </View>
       </Content>

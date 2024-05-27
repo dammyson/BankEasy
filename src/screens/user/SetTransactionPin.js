@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -6,6 +6,7 @@ import {
   StyleSheet,
   StatusBar,
   Image,
+  Dimensions,
 } from 'react-native';
 import {lightTheme} from '../../theme/colors';
 import {font} from '../../constants';
@@ -15,6 +16,9 @@ import {useNavigation} from '@react-navigation/native';
 import {dark_logo} from '../../assets/images';
 import {Rows} from './rows';
 import {List} from '../profile/list';
+import {buttonStyles} from '../../theme/ButtonStyle';
+import CodeInput from '../../components/CodeInput';
+import PinInput from '../../components/PinInput';
 
 const defaultAuthState = {
   hasLoggedInOnce: false,
@@ -24,11 +28,15 @@ const defaultAuthState = {
   refreshToken: '',
 };
 
-const TransactionDetails = ({route}) => {
-  const [index, setIndex] = useState(0);
+const SetTransactionPin = () => {
+  const [mode, setMode] = useState('new');
   const navigation = useNavigation();
+  const [pin, setPin] = useState('');
+  const [confirmPin, setConfirmPin] = useState('');
 
-  const {detail} = route.params;
+  useEffect(() => {
+    if (pin.length === 6) setMode('confirm');
+  }, [pin]);
 
   return (
     <Container style={{backgroundColor: lightTheme.WHITE_COLOR}}>
@@ -72,7 +80,7 @@ const TransactionDetails = ({route}) => {
               fontFamily: font.SEMI_BOLD,
               fontSize: 22,
             }}>
-            Transaction Detail
+            Set Transactions PIN
           </Text>
         </View>
         <Image
@@ -82,64 +90,60 @@ const TransactionDetails = ({route}) => {
       </View>
       <Content style={{marginTop: 20}}>
         <View style={[styles.container, {marginBottom: 40}]}>
-          <Text style={{textAlign: 'center', color: lightTheme.NEUTRAL_MAIN}}>
-            Transfer
-          </Text>
-          <Text
-            style={{
-              color:
-                detail.type === 'debit'
-                  ? lightTheme.TEXT_RED
-                  : lightTheme.SUCCESS_COLOR,
-              fontSize: 30,
-              fontWeight: 700,
-              marginTop: 1,
-              textAlign: 'center',
-              marginBottom: 30,
-            }}>
-            {detail.type === 'debit' ? '- ₦ ' : '+ ₦ '}
-            {detail.amount}
-          </Text>
           <View
-            style={{borderTopWidth: 1, borderColor: lightTheme.BORDER_MAIN}}>
-            <View
+            style={{
+              flex: 1,
+              height: Dimensions.get('window').height - 270,
+            }}>
+            <Text
               style={{
-                backgroundColor: lightTheme.NEUTRAL_COLOR,
-                borderRadius: 15,
-                marginBottom: 20,
-                padding: 20,
-                marginTop: 15,
+                textAlign: 'center',
+                fontSize: 16,
+                color: lightTheme.NEUTRAL_MAIN,
               }}>
-              <Rows
-                description={'From'}
-                boldValue={detail.sender}
-                lightValue={detail.accountNumber}
-              />
-              <Rows description={'To'} boldValue={detail.recipient} />
-              <Rows description={'Narration'} boldValue={detail.narration} />
-              <Rows description={'Reference'} boldValue={'323rkkkadweqri'} />
-              <Rows
-                description={'Total amount'}
-                boldValue={'₦' + detail.amount}
-              />
-            </View>
-            <View
-              style={{
-                backgroundColor: lightTheme.NEUTRAL_COLOR,
-                borderRadius: 15,
-              }}>
-              {items.map((item, index) => (
-                <List key={index} item={item} />
-              ))}
+              {mode === 'new'
+                ? 'Enter new transactions PIN below'
+                : 'Confirm new PIN'}
+            </Text>
+            <View style={{marginTop: 20}}>
+              {mode === 'new' ? (
+                <PinInput pin={pin} onChangeText={txt => setPin(txt)} />
+              ) : (
+                <PinInput
+                  pin={confirmPin}
+                  onChangeText={txt => setConfirmPin(txt)}
+                />
+              )}
             </View>
           </View>
+          {mode === 'confirm' && (
+            <View
+              style={{
+                marginLeft: 20,
+                marginRight: 20,
+              }}>
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate('AuthSuccess', {
+                    description:
+                      'Well done! Transactions PIN has been created successfully',
+                    screen: 'SignIn',
+                  })
+                }
+                style={[buttonStyles.primaryButtonStyle]}>
+                <Text style={[buttonStyles.primaryActionButtonTextStyle]}>
+                  Submit
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
         </View>
       </Content>
     </Container>
   );
 };
 
-export default TransactionDetails;
+export default SetTransactionPin;
 
 const styles = StyleSheet.create({
   container: {

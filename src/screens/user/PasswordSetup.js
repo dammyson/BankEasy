@@ -17,8 +17,10 @@ import {font} from '../../constants';
 import {Container, Body, Button, Left, Content} from 'native-base';
 import CodeInput from '../../components/CodeInput';
 import {textInputStyles} from '../../theme/TextInputStyle';
+import {Rows} from '../home/rows';
+import {ChevronRight, Key} from '../../assets/svgs/General';
 
-const SignInCode = ({route}) => {
+const PasswordSetup = ({route}) => {
   const navigation = useNavigation();
   const [firstName, setFirstName] = useState('');
   const [code, setCode] = useState('');
@@ -36,24 +38,6 @@ const SignInCode = ({route}) => {
               backgroundColor: lightTheme.WHITE_COLOR,
               marginTop: 10,
             }}>
-            <View
-              style={{
-                justifyContent: 'center',
-                paddingRight: 5,
-                marginRight: 5,
-              }}>
-              <TouchableOpacity
-                onPress={() => navigation.goBack()}
-                style={{justifyContent: 'center', width: 30}}>
-                <Icon
-                  active
-                  name="left"
-                  type="antdesign"
-                  size={22}
-                  color={lightTheme.BLACK_TEXT_COLOR}
-                />
-              </TouchableOpacity>
-            </View>
             <View style={{flex: 1}}>
               <Text
                 style={{
@@ -62,11 +46,10 @@ const SignInCode = ({route}) => {
                   fontSize: 24,
                   marginBottom: 2,
                 }}>
-                Create account
+                Password Setup
               </Text>
             </View>
           </View>
-
           <View
             style={{
               marginLeft: 20,
@@ -83,7 +66,7 @@ const SignInCode = ({route}) => {
                 marginBottom: 2,
                 marginTop: 2,
               }}>
-              Use invitation code
+              Almost there!
             </Text>
             <Text
               style={{
@@ -93,71 +76,68 @@ const SignInCode = ({route}) => {
                 marginBottom: 2,
                 marginTop: 10,
               }}>
-              Enter the invitation code you have received below to continue
-              signing in to your account
+              Review account details and setup a secure password.
             </Text>
-          </View>
-
-          <View style={{flex: 1}}>
             <View
               style={{
-                marginLeft: 20,
-                marginRight: 20,
-                justifyContent: 'flex-start',
-                marginBottom: 5,
+                backgroundColor: lightTheme.NEUTRAL_COLOR,
+                borderRadius: 15,
+                marginBottom: 20,
+                padding: 20,
+                marginTop: 20,
               }}>
-              <Text style={styles.inputLabel}>Phone Number </Text>
-            </View>
-
-            <View style={styles.textInputContainer}>
-              <View style={styles.input}>
-                <TextInput
-                  placeholder="Enter your Phone Number "
-                  placeholderTextColor={lightTheme.PRIMARY_TEXT_COLOR}
-                  returnKeyType="next"
-                  keyboardType="default"
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  style={{
-                    flex: 1,
-                    fontSize: 14,
-                    color: lightTheme.PRIMARY_TEXT_COLOR,
-                    fontFamily: font.REGULAR,
-                  }}
-                  onChangeText={text => setFirstName(text)}
-                  onSubmitEditing={() => console.warn('')}
-                />
-              </View>
-              <View style={textInputStyles.operation_icon}>
-                <Icon
-                  name="phone-outline"
-                  type="material-community"
-                  color="grey"
-                  size={20}
-                />
-              </View>
+              <Rows description={'First Name'} boldValue={'Deji'} />
+              <Rows description={'Last Name'} boldValue={'Adeyemi'} />
+              <Rows
+                noBorder
+                description={'Phone Number'}
+                boldValue={'08062382748'}
+              />
             </View>
             <View
               style={{
-                marginLeft: 20,
-                marginRight: 20,
-                justifyContent: 'flex-start',
-                marginBottom: 5,
+                backgroundColor: lightTheme.NEUTRAL_COLOR,
+                borderRadius: 15,
+                marginBottom: 20,
+                padding: 15,
+                marginTop: 15,
               }}>
-              <Text style={styles.inputLabel}>Enter invitation code </Text>
-            </View>
-            <View style={{}}>
-              <CodeInput onChangeText={txt => setCode(txt)} />
-            </View>
-          </View>
-          <View style={{marginLeft: 20, marginRight: 20, marginBottom: 10}}>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('PasswordSetup')}
-              style={[buttonStyles.primaryButtonStyle]}>
-              <Text style={[buttonStyles.primaryActionButtonTextStyle]}>
-                Continue
+              <Text
+                style={{
+                  color: lightTheme.NEUTRAL_MAIN,
+                  fontSize: 16,
+                  fontFamily: font.REGULAR,
+                }}>
+                To secure your account, set a new password by selecting the
+                option below.
               </Text>
-            </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('NewPassword')}
+                style={{
+                  marginTop: 15,
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  backgroundColor: '#fff',
+                  borderBottomWidth: 1,
+                  borderBottomColor: lightTheme.BORDER_MAIN,
+                  padding: 10,
+                }}>
+                <View
+                  style={{flexDirection: 'row', gap: 8, alignItems: 'center'}}>
+                  <Key />
+                  <Text
+                    style={{
+                      fontFamily: font.BOLD,
+                      color: lightTheme.HEADER_MAIN,
+                      fontSize: 16,
+                    }}>
+                    Set Password
+                  </Text>
+                </View>
+                <ChevronRight />
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </Content>
@@ -165,7 +145,7 @@ const SignInCode = ({route}) => {
   );
 };
 
-export default SignInCode;
+export default PasswordSetup;
 
 const styles = StyleSheet.create({
   container: {

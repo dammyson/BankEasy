@@ -15,6 +15,7 @@ import {useNavigation} from '@react-navigation/native';
 import {dark_logo} from '../../assets/images';
 import {Rows} from './rows';
 import {List} from '../profile/list';
+import {Cards} from '../../components/Card';
 
 const defaultAuthState = {
   hasLoggedInOnce: false,
@@ -24,11 +25,10 @@ const defaultAuthState = {
   refreshToken: '',
 };
 
-const TransactionDetails = ({route}) => {
+const TransactionInputDetails = ({route}) => {
   const [index, setIndex] = useState(0);
   const navigation = useNavigation();
-
-  const {detail} = route.params;
+  const {name} = route.params;
 
   return (
     <Container style={{backgroundColor: lightTheme.WHITE_COLOR}}>
@@ -72,7 +72,7 @@ const TransactionDetails = ({route}) => {
               fontFamily: font.SEMI_BOLD,
               fontSize: 22,
             }}>
-            Transaction Detail
+            {name}
           </Text>
         </View>
         <Image
@@ -82,56 +82,13 @@ const TransactionDetails = ({route}) => {
       </View>
       <Content style={{marginTop: 20}}>
         <View style={[styles.container, {marginBottom: 40}]}>
-          <Text style={{textAlign: 'center', color: lightTheme.NEUTRAL_MAIN}}>
-            Transfer
-          </Text>
-          <Text
-            style={{
-              color:
-                detail.type === 'debit'
-                  ? lightTheme.TEXT_RED
-                  : lightTheme.SUCCESS_COLOR,
-              fontSize: 30,
-              fontWeight: 700,
-              marginTop: 1,
-              textAlign: 'center',
-              marginBottom: 30,
-            }}>
-            {detail.type === 'debit' ? '- ₦ ' : '+ ₦ '}
-            {detail.amount}
-          </Text>
-          <View
-            style={{borderTopWidth: 1, borderColor: lightTheme.BORDER_MAIN}}>
-            <View
-              style={{
-                backgroundColor: lightTheme.NEUTRAL_COLOR,
-                borderRadius: 15,
-                marginBottom: 20,
-                padding: 20,
-                marginTop: 15,
-              }}>
-              <Rows
-                description={'From'}
-                boldValue={detail.sender}
-                lightValue={detail.accountNumber}
-              />
-              <Rows description={'To'} boldValue={detail.recipient} />
-              <Rows description={'Narration'} boldValue={detail.narration} />
-              <Rows description={'Reference'} boldValue={'323rkkkadweqri'} />
-              <Rows
-                description={'Total amount'}
-                boldValue={'₦' + detail.amount}
-              />
-            </View>
-            <View
-              style={{
-                backgroundColor: lightTheme.NEUTRAL_COLOR,
-                borderRadius: 15,
-              }}>
-              {items.map((item, index) => (
-                <List key={index} item={item} />
-              ))}
-            </View>
+          <View style={{marginTop: 25}}>
+            <Cards
+              card={styles.card}
+              dark={false}
+              cardInfo={'Savings account'}
+              accountNumber={'0800509703'}
+            />
           </View>
         </View>
       </Content>
@@ -139,7 +96,7 @@ const TransactionDetails = ({route}) => {
   );
 };
 
-export default TransactionDetails;
+export default TransactionInputDetails;
 
 const styles = StyleSheet.create({
   container: {
@@ -149,19 +106,10 @@ const styles = StyleSheet.create({
   mainbody: {
     flex: 1,
   },
+  card: {
+    backgroundColor: lightTheme.NEUTRAL_100,
+    marginTop: 10,
+    borderRadius: 14,
+    padding: 20,
+  },
 });
-
-const items = [
-  {
-    name: 'Share receipt',
-    icon_name: 'sharealt',
-    icon_type: 'ant-design',
-    number: '40',
-  },
-  {
-    name: 'Report an issue',
-    icon_name: 'info-outline',
-    icon_type: 'material',
-    number: '40',
-  },
-];

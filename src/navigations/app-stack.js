@@ -10,6 +10,10 @@ import PhoneNumberConfirmation from '../screens/user/PhoneNumberConfirmation';
 import ResetPassword from '../screens/user/ResetPassword';
 import ExistingAccounts from '../screens/accounts/ExistingAccounts';
 import BottomTab from '../screens/TabsNavigation';
+import PasswordSetup from '../screens/user/PasswordSetup';
+import NewPassword from '../screens/user/NewPassword';
+import SetTransactionPin from '../screens/user/SetTransactionPin';
+import AuthSuccess from '../screens/user/AuthSuccess';
 
 const Stack = createStackNavigator();
 
@@ -27,7 +31,11 @@ const Route = () => {
         <Stack.Screen name="Welcome" component={Welcome} />
         <Stack.Screen name="SignIn" component={SignIn} />
         <Stack.Screen name="SignInCode" component={SignInCode} />
+        <Stack.Screen name="PasswordSetup" component={PasswordSetup} />
         <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
+        <Stack.Screen name="NewPassword" component={NewPassword} />
+        <Stack.Screen name="AuthSuccess" component={AuthSuccess} />
+        <Stack.Screen name="SetTransactionPin" component={SetTransactionPin} />
         <Stack.Screen
           name="PhoneNumberConfirmation"
           component={PhoneNumberConfirmation}

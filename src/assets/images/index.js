@@ -10,6 +10,9 @@ import bunmi from './bunmi.png';
 import bank from './bank.png';
 import mini_logo from './mini_logo.png';
 import dark_logo from './dark_logo.png';
+import success from './success.png';
+import location from './location.png';
+import eyes from './eyes.png';
 
 export {
   logo,
@@ -24,4 +27,7 @@ export {
   bank,
   mini_logo,
   dark_logo,
+  success,
+  location,
+  eyes,
 };

@@ -76,7 +76,8 @@ const ResetPassword = ({route}) => {
                 marginLeft: 20,
                 marginRight: 20,
               }}>
-              Enter the phone number tied to your account to reset your password
+              Choose a very strong password that is easy for you to remember but
+              hard for others to guess.
             </Text>
             <View
               style={{

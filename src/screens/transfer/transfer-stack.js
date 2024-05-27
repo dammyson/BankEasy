@@ -1,6 +1,7 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import Transfer from './transfer';
+import TransactionInputDetails from './transferInputDetails';
 
 const Stack = createStackNavigator();
 
@@ -14,6 +15,10 @@ const Route = () => {
       }}
       initialRouteName="Transfer">
       <Stack.Screen name="Transfer" component={Transfer} />
+      <Stack.Screen
+        name="TransferInputDetails"
+        component={TransactionInputDetails}
+      />
     </Stack.Navigator>
   );
 };

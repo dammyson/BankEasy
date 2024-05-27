@@ -4,6 +4,7 @@ import {View, Text, TouchableOpacity} from 'react-native';
 import {lightTheme} from '../../theme/colors';
 import {font} from '../../constants';
 import {useNavigation} from '@react-navigation/native';
+import {Incoming, Outgoing} from '../../assets/svgs/General';
 
 export const TransferList = ({item}) => {
   const navigation = useNavigation();
@@ -17,32 +18,8 @@ export const TransferList = ({item}) => {
         borderBottomWidth: 1,
         borderColor: lightTheme.BORDER_MAIN,
         height: 85,
-        marginHorizontal: 20,
       }}>
-      <View
-        style={{
-          borderRadius: 25,
-          height: 24,
-          width: 24,
-          backgroundColor:
-            item.type === 'debit'
-              ? lightTheme.LIGHT_RED
-              : lightTheme.LIGHT_SUCCESS,
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}>
-        <Icon
-          active
-          name={item.icon_name}
-          type={item.icon_type}
-          size={16}
-          color={
-            item.type === 'debit'
-              ? lightTheme.TEXT_RED
-              : lightTheme.SUCCESS_COLOR
-          }
-        />
-      </View>
+      {item.type === 'debit' ? <Outgoing /> : <Incoming />}
       <View
         style={{
           marginLeft: 20,

@@ -14,8 +14,10 @@ import {font, transferHistory} from '../../constants';
 import {Container, Content} from 'native-base';
 import {Icon} from '@rneui/themed';
 import {useNavigation} from '@react-navigation/native';
-import {monie_point, no_transaction} from '../../assets/images';
+import {location, monie_point, no_transaction} from '../../assets/images';
 import {TransferList} from './transferList';
+import {Cards} from '../../components/Card';
+import {Location} from '../../assets/svgs/General';
 
 const defaultAuthState = {
   hasLoggedInOnce: false,
@@ -39,108 +41,65 @@ const Home = () => {
       />
       <View
         style={{
-          flexDirection: 'row',
-          marginBottom: 10,
+          borderWidth: 1,
+          borderColor: lightTheme.BORDER_MAIN,
           marginHorizontal: 20,
-          backgroundColor: lightTheme.WHITE_COLOR,
           marginTop: 45,
+          paddingVertical: 20,
+          borderRadius: 16,
         }}>
         <View
           style={{
+            flexDirection: 'row',
             backgroundColor: lightTheme.WHITE_COLOR,
-            marginBottom: 10,
-            flex: 1,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
+            borderBottomWidth: 1,
+            borderBottomColor: lightTheme.BORDER_MAIN,
           }}>
-          <View style={{flex: 1, flexDirection: 'row'}}>
-            <Text style={{fontSize: 20, fontWeight: 400}}>Welcome,</Text>
-            <Text style={{fontWeight: 700, fontSize: 20}}> Deji Adeyemi</Text>
-          </View>
-          <Image
-            style={{height: 35, width: 35, borderRadius: 25}}
-            source={monie_point}
-          />
-        </View>
-      </View>
-      <View
-        style={{
-          marginHorizontal: 20,
-          flexDirection: 'row',
-          gap: 12,
-          alignItems: 'center',
-        }}>
-        <Icon active name="location" type="entypo" size={20} />
-        <View>
-          <Text style={{fontWeight: 500, fontSize: 14}}>
-            Moniepoint Microfinance Bank
-          </Text>
-          <Text
+          <View
             style={{
-              fontSize: 12,
-              color: lightTheme.NEUTRAL_MAIN,
-              marginTop: 2,
+              backgroundColor: lightTheme.WHITE_COLOR,
+              marginBottom: 10,
+              flex: 1,
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              paddingHorizontal: 15,
             }}>
-            Head Office, Oyo-Ibadan Road, Idi-Agba, Ilora, Oyo
-          </Text>
-        </View>
-      </View>
-      <View style={styles.card}>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}>
-          <View>
-            <Text style={{color: lightTheme.CHECK_BORDER, fontSize: 16}}>
-              Balance
-            </Text>
-            <View
-              style={{
-                flexDirection: 'row',
-                gap: 3,
-                alignItems: 'center',
-                marginTop: 1,
-              }}>
-              <Text style={{color: '#fff', fontSize: 21, fontWeight: 400}}>
-                ₦
-              </Text>
-              <Text style={{color: '#fff', fontSize: 32, fontWeight: 700}}>
-                0.00
-              </Text>
+            <View style={{flex: 1, flexDirection: 'row'}}>
+              <Text style={{fontSize: 16, fontWeight: 400}}>Welcome,</Text>
+              <Text style={{fontWeight: 700, fontSize: 16}}> Deji Adeyemi</Text>
             </View>
+            <Image
+              style={{height: 32, width: 32, borderRadius: 25}}
+              source={monie_point}
+            />
           </View>
-          <Icon
-            borderRadius={20}
-            active
-            name="eye-circle"
-            type="material-community"
-            size={30}
-            color={lightTheme.CHECK_BACKGROUND}
-            backgroundColor={'#fff'}
-          />
         </View>
         <View
           style={{
             flexDirection: 'row',
+            gap: 12,
             alignItems: 'center',
-            gap: 6,
-            marginTop: 20,
+            marginTop: 10,
+            paddingHorizontal: 15,
           }}>
-          <Text style={{color: '#fff', fontSize: 14, fontWeight: 500}}>
-            Create New Account Number
-          </Text>
-          <Icon
-            color={'#fff'}
-            name="arrow-outward"
-            type="material"
-            active
-            size={24}
-          />
+          <Image style={{height: 24, width: 14}} source={location} />
+          <View>
+            <Text style={{fontWeight: 500, fontSize: 13}}>
+              Moniepoint Microfinance Bank
+            </Text>
+            <Text
+              style={{
+                fontSize: 10,
+                color: lightTheme.NEUTRAL_MAIN,
+                marginTop: 2,
+              }}>
+              Head Office, Oyo-Ibadan Road, Idi-Agba, Ilora, Oyo
+            </Text>
+          </View>
         </View>
       </View>
+      <Cards card={styles.card} dark={true} />
       <View style={styles.transferContainer}>
         <View style={styles.transferHeader}>
           <Text style={{fontSize: 18, fontWeight: 600}}>Transfer History</Text>
@@ -191,8 +150,8 @@ const Home = () => {
             </View>
           ) : (
             <View style={{marginBottom: 40}}>
-              {transferHistory.map(item => (
-                <TransferList item={item} />
+              {transferHistory.map((item, index) => (
+                <TransferList key={index} item={item} />
               ))}
             </View>
           )}

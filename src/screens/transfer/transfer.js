@@ -81,7 +81,13 @@ const Transfer = () => {
                 justifyContent: 'space-between',
                 marginBottom: 30,
               }}>
-              <View style={[styles.banksBlock, styles.bankEasyBlock]}>
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate('TransferInputDetails', {
+                    name: 'Bank easy transfer',
+                  })
+                }
+                style={[styles.banksBlock, styles.bankEasyBlock]}>
                 <Image
                   style={{height: 50, width: 50, borderRadius: 25}}
                   source={mini_logo}
@@ -101,8 +107,14 @@ const Transfer = () => {
                     color={lightTheme.BLACK_TEXT_COLOR}
                   />
                 </View>
-              </View>
-              <View style={[styles.banksBlock, styles.otherBanksBlock]}>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate('TransferInputDetails', {
+                    name: 'Other banks transfer',
+                  })
+                }
+                style={[styles.banksBlock, styles.otherBanksBlock]}>
                 <Image
                   style={{height: 50, width: 50, borderRadius: 25}}
                   source={bank}
@@ -122,7 +134,7 @@ const Transfer = () => {
                     color={lightTheme.BLACK_TEXT_COLOR}
                   />
                 </View>
-              </View>
+              </TouchableOpacity>
             </View>
             <View
               style={{
