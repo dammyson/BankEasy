@@ -13,6 +13,7 @@ import dark_logo from './dark_logo.png';
 import success from './success.png';
 import location from './location.png';
 import eyes from './eyes.png';
+import light_eye from './light_eye.png';
 
 export {
   logo,
@@ -30,4 +31,5 @@ export {
   success,
   location,
   eyes,
+  light_eye,
 };

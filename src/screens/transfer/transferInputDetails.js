@@ -80,9 +80,9 @@ const TransactionInputDetails = ({route}) => {
           source={dark_logo}
         />
       </View>
-      <Content style={{marginTop: 20}}>
+      <Content>
         <View style={[styles.container, {marginBottom: 40}]}>
-          <View style={{marginTop: 25}}>
+          <View style={{marginTop: 20}}>
             <Cards
               card={styles.card}
               dark={false}

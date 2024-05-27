@@ -2,7 +2,7 @@ import {Icon} from '@rneui/themed';
 import {Image, Text, View} from 'react-native';
 import {lightTheme} from '../theme/colors';
 import {DiagonalArrow, Eyes} from '../assets/svgs/General';
-import {eyes} from '../assets/images';
+import {eyes, light_eye} from '../assets/images';
 
 export const Cards = ({card, dark, cardInfo, accountNumber}) => {
   return (
@@ -46,7 +46,11 @@ export const Cards = ({card, dark, cardInfo, accountNumber}) => {
             </Text>
           </View>
         </View>
-        <Image style={{height: 32, width: 32}} source={eyes} />
+        {dark ? (
+          <Image style={{height: 32, width: 32}} source={eyes} />
+        ) : (
+          <Image style={{height: 32, width: 32}} source={light_eye} />
+        )}
       </View>
       {dark ? (
         <View
