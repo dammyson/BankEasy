@@ -1,7 +1,13 @@
 import {Text, View} from 'react-native';
 import {lightTheme} from '../../theme/colors';
 
-export const Rows = ({description, boldValue, lightValue, noBorder}) => {
+export const Rows = ({
+  description,
+  boldValue,
+  lightValue,
+  noBorder,
+  textClass,
+}) => {
   return (
     <View
       style={{
@@ -17,12 +23,14 @@ export const Rows = ({description, boldValue, lightValue, noBorder}) => {
           justifyContent: 'space-between',
           alignItems: 'flex-start',
         }}>
-        <Text>{description}</Text>
+        <Text style={textClass}>{description}</Text>
         <View>
           <Text
             style={{
               color:
-                description === 'Total amount' ? lightTheme.ORANGE : '#000',
+                description === 'Total amount'
+                  ? lightTheme.ORANGE
+                  : lightTheme.HEADER_MAIN,
               fontWeight: 600,
               fontSize: description === 'Total amount' ? 20 : 16,
               textAlign: 'right',

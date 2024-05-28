@@ -43,7 +43,7 @@ const Home = () => {
         style={{
           borderWidth: 1,
           borderColor: lightTheme.BORDER_MAIN,
-          marginHorizontal: 20,
+          marginHorizontal: 15,
           marginTop: 45,
           paddingVertical: 20,
           borderRadius: 16,

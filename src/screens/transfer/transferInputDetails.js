@@ -16,6 +16,10 @@ import {dark_logo} from '../../assets/images';
 import {Rows} from './rows';
 import {List} from '../profile/list';
 import {Cards} from '../../components/Card';
+import {Select} from '../../components/Select';
+import {CustomInput} from '../../components/CustomInput';
+import {buttonStyles} from '../../theme/ButtonStyle';
+import LinearGradient from 'react-native-linear-gradient';
 
 const defaultAuthState = {
   hasLoggedInOnce: false,
@@ -27,8 +31,27 @@ const defaultAuthState = {
 
 const TransactionInputDetails = ({route}) => {
   const [index, setIndex] = useState(0);
+  const [bank, setBank] = useState('');
+  const [acctNumber, setAcctNumber] = useState('');
   const navigation = useNavigation();
-  const {name} = route.params;
+  const [amount, setAmount] = useState();
+  const [narration, setNarration] = useState('');
+
+  const {name, type} = route.params;
+
+  const data = [
+    {label: 'Access bank', value: 'access'},
+    {label: 'Eco bank', value: 'eco'},
+    {label: 'Fidelity bank', value: 'fidelity'},
+    {label: 'Wema bank', value: 'wema'},
+  ];
+
+  const getValue = param => {
+    setAcctNumber(param);
+  };
+  const getAmount = param => {
+    setAmount(param);
+  };
 
   return (
     <Container style={{backgroundColor: lightTheme.WHITE_COLOR}}>
@@ -89,6 +112,60 @@ const TransactionInputDetails = ({route}) => {
               cardInfo={'Savings account'}
               accountNumber={'0800509703'}
             />
+          </View>
+          <View style={{marginTop: 10}}>
+            {type === 'others' && (
+              <Select
+                data={data}
+                value={bank}
+                handleSelect={param => setBank(param)}
+                placeholder={'Select the bank'}
+                label={'Select bank'}
+                search={false}
+              />
+            )}
+            <CustomInput
+              label={'Account Number'}
+              placeholder={'Enter account number'}
+              extras={'Account number'}
+              value={acctNumber}
+              getValue={getValue}
+            />
+            <CustomInput
+              label={'Amount'}
+              placeholder={'Enter Amount'}
+              value={amount}
+              getValue={getAmount}
+            />
+            <CustomInput
+              label={'Narration'}
+              placeholder={'Enter Narration'}
+              value={amount}
+              getValue={text => setNarration(text)}
+            />
+            <View style={{marginVertical: 50}}>
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate('TransactionConfirmation', {type: type})
+                }>
+                <LinearGradient
+                  colors={['#4A463C', '#232323']}
+                  useAngle={true}
+                  style={{
+                    height: 62,
+                    borderRadius: 10,
+                    marginTop: 10,
+                    marginBottom: 10,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                  angle={45}>
+                  <Text style={[buttonStyles.primaryActionButtonTextStyle]}>
+                    Proceed
+                  </Text>
+                </LinearGradient>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </Content>

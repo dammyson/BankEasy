@@ -17,6 +17,7 @@ import {font} from '../../constants';
 import {Container, Body, Button, Left, Content} from 'native-base';
 import CodeInput from '../../components/CodeInput';
 import {textInputStyles} from '../../theme/TextInputStyle';
+import LinearGradient from 'react-native-linear-gradient';
 
 const SignInCode = ({route}) => {
   const navigation = useNavigation();
@@ -152,11 +153,23 @@ const SignInCode = ({route}) => {
           </View>
           <View style={{marginLeft: 20, marginRight: 20, marginBottom: 10}}>
             <TouchableOpacity
-              onPress={() => navigation.navigate('PasswordSetup')}
-              style={[buttonStyles.primaryButtonStyle]}>
-              <Text style={[buttonStyles.primaryActionButtonTextStyle]}>
-                Continue
-              </Text>
+              onPress={() => navigation.navigate('PasswordSetup')}>
+              <LinearGradient
+                colors={['#4A463C', '#232323']}
+                useAngle={true}
+                style={{
+                  height: 62,
+                  borderRadius: 10,
+                  marginTop: 10,
+                  marginBottom: 10,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+                angle={45}>
+                <Text style={[buttonStyles.primaryActionButtonTextStyle]}>
+                  Continue
+                </Text>
+              </LinearGradient>
             </TouchableOpacity>
           </View>
         </View>

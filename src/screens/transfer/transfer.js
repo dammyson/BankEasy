@@ -85,6 +85,7 @@ const Transfer = () => {
                 onPress={() =>
                   navigation.navigate('TransferInputDetails', {
                     name: 'Bank easy transfer',
+                    type: 'in-bank',
                   })
                 }
                 style={[styles.banksBlock, styles.bankEasyBlock]}>
@@ -95,10 +96,14 @@ const Transfer = () => {
                 <Text style={styles.bankName}>Bank easy transfer </Text>
                 <Text
                   style={{color: lightTheme.NEUTRAL_MAIN, marginVertical: 6}}>
-                  Transfer to other bank easy users{' '}
+                  Transfer to other bank easy users
                 </Text>
                 <View
-                  style={{flexDirection: 'row', justifyContent: 'flex-start'}}>
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'flex-start',
+                    marginTop: 10,
+                  }}>
                   <Icon
                     active
                     name="right"
@@ -112,6 +117,7 @@ const Transfer = () => {
                 onPress={() =>
                   navigation.navigate('TransferInputDetails', {
                     name: 'Other banks transfer',
+                    type: 'others',
                   })
                 }
                 style={[styles.banksBlock, styles.otherBanksBlock]}>
@@ -125,7 +131,11 @@ const Transfer = () => {
                   Make a transfer to other banks users{' '}
                 </Text>
                 <View
-                  style={{flexDirection: 'row', justifyContent: 'flex-start'}}>
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'flex-start',
+                    marginTop: 10,
+                  }}>
                   <Icon
                     active
                     name="right"
@@ -151,7 +161,7 @@ const Transfer = () => {
               </Text>
             </View>
             {transfers.map((transfer, i) => (
-              <View style={styles.accountContainer}>
+              <View key={i} style={styles.accountContainer}>
                 <Image
                   style={{height: 35, width: 35, borderRadius: 25}}
                   source={transfer.img}
@@ -201,7 +211,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFF',
-    paddingHorizontal: 20,
+    paddingHorizontal: 15,
   },
   background: {
     flex: 1,
@@ -238,7 +248,8 @@ const styles = StyleSheet.create({
   banksBlock: {
     borderRadius: 14,
     width: '49%',
-    padding: 15,
+    paddingHorizontal: 15,
+    paddingVertical: 20,
   },
   bankEasyBlock: {
     backgroundColor: lightTheme.SKY_BLUE,

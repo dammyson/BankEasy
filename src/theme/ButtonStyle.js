@@ -3,7 +3,7 @@ import {StyleSheet} from 'react-native';
 import {font} from '../constants';
 export const buttonStyles = StyleSheet.create({
   primaryButtonStyle: {
-    height: 65,
+    height: 62,
     borderRadius: 10,
     marginTop: 10,
     marginBottom: 10,
