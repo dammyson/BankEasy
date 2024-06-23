@@ -14,6 +14,11 @@ import success from './success.png';
 import location from './location.png';
 import eyes from './eyes.png';
 import light_eye from './light_eye.png';
+import failed from './failed.png';
+import nine_mobile from './9mobile.png';
+import mtn from './mtn-be.png';
+import glo from './glo.png';
+import airtel from './airtel.png';
 
 export {
   logo,
@@ -32,4 +37,9 @@ export {
   location,
   eyes,
   light_eye,
+  failed,
+  airtel,
+  mtn,
+  glo,
+  nine_mobile,
 };

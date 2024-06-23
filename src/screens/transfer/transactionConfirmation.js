@@ -32,7 +32,12 @@ const TransactionConfirmation = ({route}) => {
   const {type} = route.params;
 
   const detail = {
-    category: type === 'others' ? 'Other bank transfer' : 'Bank easy transfer',
+    category:
+      type === 'in-bank'
+        ? 'Bank easy transfer'
+        : type === 'others'
+        ? 'Other bank transfer'
+        : type,
     name: 'Kingfisher Ogunedo-057',
     date: '23rd dec, 2022',
     time: '8:00am',
@@ -202,22 +207,27 @@ const TransactionConfirmation = ({route}) => {
                 description={'Category'}
                 boldValue={detail.category}
               />
-              <Rows
-                textClass={{
-                  color: lightTheme.NEUTRAL_MAIN,
-                  fontFamily: font.REGULAR,
-                }}
-                description={'Bank'}
-                boldValue={detail.bank}
-              />
-              <Rows
-                textClass={{
-                  color: lightTheme.NEUTRAL_MAIN,
-                  fontFamily: font.REGULAR,
-                }}
-                description={'Commission'}
-                boldValue={'₦' + detail.commission}
-              />
+              {type === 'others' ||
+                (type === 'in-bank' && (
+                  <>
+                    <Rows
+                      textClass={{
+                        color: lightTheme.NEUTRAL_MAIN,
+                        fontFamily: font.REGULAR,
+                      }}
+                      description={'Bank'}
+                      boldValue={detail.bank}
+                    />
+                    <Rows
+                      textClass={{
+                        color: lightTheme.NEUTRAL_MAIN,
+                        fontFamily: font.REGULAR,
+                      }}
+                      description={'Commission'}
+                      boldValue={'₦' + detail.commission}
+                    />
+                  </>
+                ))}
               <Rows
                 textClass={{
                   color: lightTheme.NEUTRAL_MAIN,
@@ -229,29 +239,33 @@ const TransactionConfirmation = ({route}) => {
               />
             </View>
           </View>
-          <View style={{marginVertical: 50}}>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('TransactionConfirmation')}>
-              <LinearGradient
-                colors={['#4A463C', '#232323']}
-                useAngle={true}
-                style={{
-                  height: 62,
-                  borderRadius: 10,
-                  marginTop: 10,
-                  marginBottom: 10,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
-                angle={45}>
-                <Text style={[buttonStyles.primaryActionButtonTextStyle]}>
-                  Make Transfer
-                </Text>
-              </LinearGradient>
-            </TouchableOpacity>
-          </View>
         </View>
       </Content>
+      <View style={{marginHorizontal: 20, marginBottom: 100}}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('TransferAuthentication')}>
+          <LinearGradient
+            colors={['#4A463C', '#232323']}
+            useAngle={true}
+            style={{
+              height: 62,
+              borderRadius: 10,
+              marginTop: 10,
+              marginBottom: 10,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+            angle={45}>
+            <Text style={[buttonStyles.primaryActionButtonTextStyle]}>
+              {type === 'Airtime' || type === 'Data'
+                ? `Buy ${type}`
+                : type === 'others' || type === 'in-bank'
+                ? 'Make Transfer'
+                : `Pay bill`}
+            </Text>
+          </LinearGradient>
+        </TouchableOpacity>
+      </View>
     </Container>
   );
 };

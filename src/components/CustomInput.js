@@ -13,12 +13,14 @@ export const CustomInput = ({
   label,
   extraClassName,
   placeholder,
+  placeholderColor,
   extras,
   icon,
   isPhone,
   labelClass,
   value,
   getValue,
+  iconClass,
 }) => {
   return (
     <View style={{marginVertical: 15, position: 'relative'}}>
@@ -60,7 +62,7 @@ export const CustomInput = ({
       )}
       <TextInput
         placeholder={placeholder}
-        placeholderTextColor={'#00000080'}
+        placeholderTextColor={placeholderColor ?? '#00000080'}
         style={[styles.inputStyle, {paddingLeft: isPhone ? 45 : 25}]}
         defaultValue={value}
         onChangeText={text => getValue(text)}
@@ -79,7 +81,9 @@ export const CustomInput = ({
         </Text>
       )}
       {icon && (
-        <View style={{position: 'absolute', right: 20, top: 13}}>{icon}</View>
+        <View style={iconClass ?? {position: 'absolute', right: 20, top: 13}}>
+          {icon}
+        </View>
       )}
     </View>
   );

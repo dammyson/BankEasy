@@ -11,21 +11,39 @@ export const buttonStyles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: lightTheme.PRIMARY_BUTTON_COLOR,
   },
-  secondaryButtonStyle: {
-    height: 45,
-    borderRadius: 30,
+
+  neutralButtonStyle: {
+    flexDirection: 'row',
+    height: 62,
+    borderRadius: 10,
     marginTop: 10,
     marginBottom: 10,
     justifyContent: 'center',
+    gap: 8,
+    alignItems: 'center',
+    backgroundColor: lightTheme.NEUTRAL_COLOR,
+  },
+  secondaryButtonStyle: {
+    flexDirection: 'row',
+    height: 62,
+    borderRadius: 10,
+    marginTop: 10,
+    marginBottom: 10,
+    gap: 10,
+    justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: lightTheme.SECONDARY_COLOR,
-    borderColor: lightTheme.SECONDARY_COLOR,
-    borderWidth: 2,
   },
   primaryButtonTextStyle: {
     fontFamily: font.BOLD,
     fontSize: 14,
     color: lightTheme.PRIMARY_COLOR,
+  },
+
+  neutralButtonTextStyle: {
+    fontFamily: font.BOLD,
+    fontSize: 14,
+    color: lightTheme.HEADER_MAIN,
   },
   primaryActionButtonStyle: {
     height: 45,

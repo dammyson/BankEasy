@@ -3,7 +3,6 @@ import {
   Text,
   StyleSheet,
   View,
-  TextInput,
   TouchableOpacity,
   Dimensions,
   StatusBar,
@@ -11,18 +10,17 @@ import {
 } from 'react-native';
 import {lightTheme} from '../../theme/colors';
 import {useNavigation} from '@react-navigation/native';
-import {Icon} from '@rneui/themed';
 import {buttonStyles} from '../../theme/ButtonStyle';
 import {font} from '../../constants';
 import {Container, Content} from 'native-base';
-import {textInputStyles} from '../../theme/TextInputStyle';
-import {success} from '../../assets/images';
+import {failed, success} from '../../assets/images';
+import {Info, Refresh, Save, Share} from '../../assets/svgs/General';
 
 const AuthSuccess = ({route}) => {
   const navigation = useNavigation();
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-
+  const [isSuccess, setIsSuccess] = useState(true);
   const {description, screen} = route.params;
 
   return (
@@ -39,7 +37,7 @@ const AuthSuccess = ({route}) => {
             }}>
             <Image
               style={{height: 120, width: 120, borderRadius: 50}}
-              source={success}
+              source={isSuccess ? success : failed}
             />
             <Text
               style={{
@@ -49,7 +47,7 @@ const AuthSuccess = ({route}) => {
                 marginBottom: 2,
                 marginTop: 20,
               }}>
-              Success
+              {isSuccess ? 'Success' : 'Failed'}
             </Text>
             <Text
               style={{
@@ -58,22 +56,89 @@ const AuthSuccess = ({route}) => {
                 fontSize: 16,
                 textAlign: 'center',
               }}>
-              {description}
+              {isSuccess ? description : 'Transfer failed'}
             </Text>
           </View>
-          <View
-            style={{
-              marginLeft: 20,
-              marginRight: 20,
-            }}>
-            <TouchableOpacity
-              onPress={() => navigation.navigate(screen)}
-              style={[buttonStyles.primaryButtonStyle]}>
-              <Text style={[buttonStyles.primaryActionButtonTextStyle]}>
-                Continue
-              </Text>
-            </TouchableOpacity>
-          </View>
+          {screen === 'transferSuccess' ? (
+            <View>
+              {isSuccess ? (
+                <View
+                  style={{
+                    marginLeft: 20,
+                    marginRight: 20,
+                  }}>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate('SelectBill')}
+                    style={[buttonStyles.neutralButtonStyle]}>
+                    <Text style={[buttonStyles.neutralButtonTextStyle]}>
+                      Save beneficiary
+                    </Text>
+                    <Save />
+                  </TouchableOpacity>
+                </View>
+              ) : (
+                <View
+                  style={{
+                    marginLeft: 20,
+                    marginRight: 20,
+                  }}>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate(screen)}
+                    style={[buttonStyles.neutralButtonStyle]}>
+                    <Text style={[buttonStyles.neutralButtonTextStyle]}>
+                      Report an issue
+                    </Text>
+                    <Info />
+                  </TouchableOpacity>
+                </View>
+              )}
+              {isSuccess ? (
+                <View
+                  style={{
+                    marginLeft: 20,
+                    marginRight: 20,
+                  }}>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate(screen)}
+                    style={[buttonStyles.secondaryButtonStyle]}>
+                    <Text style={[buttonStyles.neutralButtonTextStyle]}>
+                      Share receipt
+                    </Text>
+                    <Share />
+                  </TouchableOpacity>
+                </View>
+              ) : (
+                <View
+                  style={{
+                    marginLeft: 20,
+                    marginRight: 20,
+                  }}>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate(screen)}
+                    style={[buttonStyles.secondaryButtonStyle]}>
+                    <Text style={[buttonStyles.neutralButtonTextStyle]}>
+                      Try again
+                    </Text>
+                    <Refresh />
+                  </TouchableOpacity>
+                </View>
+              )}
+            </View>
+          ) : (
+            <View
+              style={{
+                marginLeft: 20,
+                marginRight: 20,
+              }}>
+              <TouchableOpacity
+                onPress={() => navigation.navigate(screen)}
+                style={[buttonStyles.primaryButtonStyle]}>
+                <Text style={[buttonStyles.primaryActionButtonTextStyle]}>
+                  Continue
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
         </View>
       </Content>
     </Container>

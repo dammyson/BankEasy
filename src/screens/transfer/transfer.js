@@ -167,7 +167,9 @@ const Transfer = () => {
                   source={transfer.img}
                 />
                 <View style={styles.textContainer}>
-                  <Text style={styles.accountName}>{transfer.name}</Text>
+                  <Text style={styles.accountName}>
+                    {transfer.first_name} {transfer.last_name}
+                  </Text>
                   <View
                     style={{
                       flexDirection: 'row',

@@ -4,7 +4,7 @@ import {View, Text, TouchableOpacity} from 'react-native';
 import {lightTheme} from '../../theme/colors';
 import {font} from '../../constants';
 
-export const List = ({item}) => {
+export const List = ({item, onPress}) => {
   const [checkStates, setCheckStates] = useState(false);
 
   const handleToggleClick = () => {
@@ -12,7 +12,8 @@ export const List = ({item}) => {
   };
 
   return (
-    <View
+    <TouchableOpacity
+      onPress={onPress}
       style={{
         flexDirection: 'row',
         marginVertical: 6,
@@ -77,6 +78,6 @@ export const List = ({item}) => {
           />
         </TouchableOpacity>
       )}
-    </View>
+    </TouchableOpacity>
   );
 };

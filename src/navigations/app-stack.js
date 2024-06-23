@@ -14,7 +14,6 @@ import PasswordSetup from '../screens/user/PasswordSetup';
 import NewPassword from '../screens/user/NewPassword';
 import SetTransactionPin from '../screens/user/SetTransactionPin';
 import AuthSuccess from '../screens/user/AuthSuccess';
-import TransactionConfirmation from '../screens/transfer/transactionConfirmation';
 
 const Stack = createStackNavigator();
 
@@ -37,10 +36,6 @@ const Route = () => {
         <Stack.Screen name="NewPassword" component={NewPassword} />
         <Stack.Screen name="AuthSuccess" component={AuthSuccess} />
         <Stack.Screen name="SetTransactionPin" component={SetTransactionPin} />
-        <Stack.Screen
-          name="TransactionConfirmation"
-          component={TransactionConfirmation}
-        />
         <Stack.Screen
           name="PhoneNumberConfirmation"
           component={PhoneNumberConfirmation}

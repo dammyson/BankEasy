@@ -7,6 +7,7 @@ import {
   StatusBar,
   Image,
   Dimensions,
+  useWindowDimensions,
 } from 'react-native';
 import {lightTheme} from '../../theme/colors';
 import {font} from '../../constants';
@@ -15,6 +16,10 @@ import {Icon} from '@rneui/themed';
 import {useNavigation} from '@react-navigation/native';
 import {dark_logo} from '../../assets/images';
 import {List} from './list';
+import {globalStyles} from '../../theme/GlobalStyle';
+import CustomModal from '../../components/CustomModal';
+import {Stopper} from '../../assets/svgs/General';
+import {Rows} from '../home/rows';
 
 const defaultAuthState = {
   hasLoggedInOnce: false,
@@ -25,8 +30,9 @@ const defaultAuthState = {
 };
 
 const Profile = () => {
-  const [index, setIndex] = useState(0);
+  const deviceHeight = useWindowDimensions().height;
   const navigation = useNavigation();
+  const [modal, setModal] = useState(null);
 
   return (
     <Container style={{backgroundColor: lightTheme.WHITE_COLOR}}>
@@ -127,8 +133,18 @@ const Profile = () => {
                 borderRadius: 15,
                 marginBottom: 20,
               }}>
-              {items.top.map(item => (
-                <List item={item} />
+              {items.top.map((item, index) => (
+                <List
+                  key={index}
+                  onPress={() => {
+                    if (item.page === 'Account') {
+                      setModal('account');
+                    } else {
+                      navigation.navigate(item.page);
+                    }
+                  }}
+                  item={item}
+                />
               ))}
             </View>
             <View
@@ -153,6 +169,75 @@ const Profile = () => {
             </View>
           </View>
         </View>
+        {modal === 'account' && (
+          <CustomModal
+            positionClass={{
+              flex: 1,
+              justifyContent: 'flex-end',
+              backgroundColor: '#000000AA',
+              width: '100%',
+              alignItems: 'center',
+            }}
+            handleClick={() => setModal(null)}>
+            <View
+              style={[
+                globalStyles.modalBody,
+                {
+                  height: deviceHeight * 0.6,
+                  borderTopRightRadius: 50,
+                  borderTopLeftRadius: 50,
+                  borderBottomLeftRadius: 30,
+                  borderBottomRightRadius: 30,
+                  width: Dimensions.get('window').width,
+                  paddingHorizontal: 30,
+                  justifyContent: 'flex-start',
+                  paddingTop: 15,
+                },
+              ]}>
+              <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+                <Stopper />
+              </View>
+              <View style={{marginVertical: 20}}>
+                <Rows
+                  textClass={{color: lightTheme.NEUTRAL_300}}
+                  description={'BVN'}
+                  boldValue={'225236738'}
+                  height={70}
+                />
+                <Rows
+                  textClass={{color: lightTheme.NEUTRAL_300}}
+                  description={'Username'}
+                  boldValue={'Jerajuruchukwu'}
+                  height={70}
+                />
+                <Rows
+                  textClass={{color: lightTheme.NEUTRAL_300}}
+                  description={'Phone Number'}
+                  boldValue={'08082739907'}
+                  height={70}
+                />
+                <Rows
+                  textClass={{color: lightTheme.NEUTRAL_300}}
+                  description={'Account Number'}
+                  boldValue={'0944403799'}
+                  height={70}
+                />
+                <Rows
+                  textClass={{color: lightTheme.NEUTRAL_300}}
+                  description={'Account Name'}
+                  boldValue={'Jerome ajuruchukwu'}
+                  height={70}
+                />
+                <Rows
+                  textClass={{color: lightTheme.NEUTRAL_300}}
+                  description={'Account type'}
+                  boldValue={'Savings account'}
+                  height={70}
+                />
+              </View>
+            </View>
+          </CustomModal>
+        )}
       </Content>
     </Container>
   );
@@ -167,28 +252,28 @@ const items = {
       icon_name: 'clipboard-text-outline',
       icon_type: 'material-community',
       number: '40',
-      page: 'Plan',
+      page: 'Beneficiaries',
     },
     {
       name: 'Reset Pin',
       icon_name: 'lock-outline',
       icon_type: 'material',
       number: '40',
-      page: 'EditProfile',
+      page: 'ResetPin',
     },
     {
       name: 'Account details',
       icon_name: 'user',
       icon_type: 'feather',
       number: '35',
-      page: 'Support',
+      page: 'Account',
     },
     {
       name: 'Generate statement',
       icon_name: 'clipboard',
       icon_type: 'entypo',
       number: '22',
-      page: 'Privacy',
+      page: 'Statement',
     },
   ],
   biometric: [
@@ -197,14 +282,12 @@ const items = {
       icon_name: 'car-light-dimmed',
       icon_type: 'material-community',
       number: '22',
-      page: 'Terms',
     },
     {
       name: 'Biometric transactions',
       icon_name: 'scan1',
       icon_type: 'ant-design',
       number: '22',
-      page: 'Delete',
     },
   ],
   last: [
@@ -213,7 +296,7 @@ const items = {
       icon_name: 'chat',
       icon_type: 'material',
       number: '22',
-      page: 'Delete',
+      page: 'Support',
     },
     {
       name: 'Log Out ',

@@ -104,16 +104,77 @@ export const accounts = [
 
 export const transfers = [
   {
-    name: 'Banji Oyebola',
+    first_name: 'Banji',
+    last_name: 'Oyebola',
     type: 'Bankeasy',
     img: banji,
     id: '0921',
   },
   {
-    name: 'Bunmi Oluwatobilola',
+    first_name: 'Bunmi ',
+    last_name: 'Oluwatobilola',
     type: 'Other banks',
     img: bunmi,
     id: '0032',
+  },
+];
+
+export const beneficiaries = [
+  {
+    first_name: 'Abba',
+    last_name: 'Bayode',
+    type: 'UBA bank',
+    img: banji,
+    id: '0921',
+  },
+  {
+    first_name: 'Bunmi ',
+    last_name: 'Oluwatobilola',
+    type: 'GTB bank',
+    img: bunmi,
+    id: '1262383289',
+  },
+  {
+    first_name: 'Castor',
+    last_name: 'Daniel',
+    type: 'GTB bank',
+    img: bunmi,
+    id: '0032',
+  },
+  {
+    first_name: 'Banji',
+    last_name: 'Oyebola',
+    type: 'UBA bank',
+    img: banji,
+    id: '1262383289',
+  },
+  {
+    first_name: 'Bunmi ',
+    last_name: 'Oluwatobilola',
+    type: 'GTB bank',
+    img: bunmi,
+    id: '1262383289',
+  },
+  {
+    first_name: 'Banji',
+    last_name: 'Oyebola',
+    type: 'UBA bank',
+    img: banji,
+    id: '1262383289',
+  },
+  {
+    first_name: 'Bunmi ',
+    last_name: 'Oluwatobilola',
+    type: 'GTB bank',
+    img: bunmi,
+    id: '0032',
+  },
+  {
+    first_name: 'Banji',
+    last_name: 'Oyebola',
+    type: 'UBA bank',
+    img: banji,
+    id: '1262383289',
   },
 ];
 

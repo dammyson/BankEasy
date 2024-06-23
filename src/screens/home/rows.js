@@ -7,6 +7,7 @@ export const Rows = ({
   lightValue,
   noBorder,
   textClass,
+  height,
 }) => {
   return (
     <View
@@ -15,7 +16,7 @@ export const Rows = ({
         justifyContent: 'center',
         borderBottomWidth: noBorder ? 0 : 1,
         borderColor: lightTheme.BORDER_MAIN,
-        height: 50,
+        height: height ?? 50,
       }}>
       <View
         style={{

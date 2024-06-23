@@ -11,6 +11,7 @@ export const Select = ({
   handleSelect,
   label,
   search,
+  placeholderStyle,
 }) => {
   const [isFocus, setIsFocus] = useState(false);
 
@@ -35,7 +36,7 @@ export const Select = ({
           styles.dropdown,
           isFocus && {backgroundColor: lightTheme.SELECT_FOCUS},
         ]}
-        placeholderStyle={styles.placeholderStyle}
+        placeholderStyle={placeholderStyle ?? styles.placeholderStyle}
         selectedTextStyle={styles.selectedTextStyle}
         inputSearchStyle={styles.inputSearchStyle}
         iconStyle={styles.iconStyle}
@@ -64,7 +65,7 @@ const styles = StyleSheet.create({
     borderColor: lightTheme.INPUT_BORDER_COLOR,
     borderWidth: 0.5,
     borderRadius: 10,
-    paddingHorizontal: 20,
+    paddingHorizontal: 25,
   },
   iconStyle: {
     width: 20,
