@@ -8,6 +8,7 @@ import SelectBill from '../billPayments/selectBill';
 import Airtime from '../billPayments/Airtime';
 import Utilities from '../billPayments/Utilities';
 import Industry from '../billPayments/Industry';
+import BeneficiaryFields from '../profile/BeneficiaryFields';
 
 const Stack = createStackNavigator();
 
@@ -33,6 +34,7 @@ const Route = () => {
         name="TransactionConfirmation"
         component={TransactionConfirmation}
       />
+      <Stack.Screen name="BeneficiaryFields" component={BeneficiaryFields} />
       <Stack.Screen name="SelectBill" component={SelectBill} />
       <Stack.Screen name="Airtime" component={Airtime} />
       <Stack.Screen name="Utilities" component={Utilities} />

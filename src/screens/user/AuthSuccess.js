@@ -68,7 +68,7 @@ const AuthSuccess = ({route}) => {
                     marginRight: 20,
                   }}>
                   <TouchableOpacity
-                    onPress={() => navigation.navigate('SelectBill')}
+                    onPress={() => navigation.navigate('BeneficiaryFields')}
                     style={[buttonStyles.neutralButtonStyle]}>
                     <Text style={[buttonStyles.neutralButtonTextStyle]}>
                       Save beneficiary
@@ -82,9 +82,7 @@ const AuthSuccess = ({route}) => {
                     marginLeft: 20,
                     marginRight: 20,
                   }}>
-                  <TouchableOpacity
-                    onPress={() => navigation.navigate(screen)}
-                    style={[buttonStyles.neutralButtonStyle]}>
+                  <TouchableOpacity style={[buttonStyles.neutralButtonStyle]}>
                     <Text style={[buttonStyles.neutralButtonTextStyle]}>
                       Report an issue
                     </Text>
@@ -98,9 +96,7 @@ const AuthSuccess = ({route}) => {
                     marginLeft: 20,
                     marginRight: 20,
                   }}>
-                  <TouchableOpacity
-                    onPress={() => navigation.navigate(screen)}
-                    style={[buttonStyles.secondaryButtonStyle]}>
+                  <TouchableOpacity style={[buttonStyles.secondaryButtonStyle]}>
                     <Text style={[buttonStyles.neutralButtonTextStyle]}>
                       Share receipt
                     </Text>
@@ -113,9 +109,7 @@ const AuthSuccess = ({route}) => {
                     marginLeft: 20,
                     marginRight: 20,
                   }}>
-                  <TouchableOpacity
-                    onPress={() => navigation.navigate(screen)}
-                    style={[buttonStyles.secondaryButtonStyle]}>
+                  <TouchableOpacity style={[buttonStyles.secondaryButtonStyle]}>
                     <Text style={[buttonStyles.neutralButtonTextStyle]}>
                       Try again
                     </Text>

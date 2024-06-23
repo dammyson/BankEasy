@@ -63,7 +63,25 @@ const ForgotPassword = () => {
               </Text>
             </View>
           </View>
-
+          <View
+            style={{
+              marginLeft: 20,
+              marginRight: 20,
+              justifyContent: 'flex-start',
+              marginBottom: 15,
+              marginTop: 20,
+            }}>
+            <Text
+              style={{
+                color: lightTheme.BLACK_TEXT_COLOR,
+                fontFamily: font.REGULAR,
+                fontSize: 16,
+                marginBottom: 2,
+                marginTop: 10,
+              }}>
+              Enter the phone number tied to your account to reset your password
+            </Text>
+          </View>
           <View style={{flex: 1}}>
             <View
               style={{

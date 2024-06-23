@@ -5,6 +5,7 @@ import {
   Platform,
   Dimensions,
   TextInput,
+  TouchableOpacity,
 } from 'react-native';
 import {lightTheme} from '../theme/colors';
 import {font} from '../constants';
@@ -21,9 +22,14 @@ export const CustomInput = ({
   value,
   getValue,
   iconClass,
+  inputClass,
+  type,
+  mainClass,
+  onIconPress,
+  secureTextEntry,
 }) => {
   return (
-    <View style={{marginVertical: 15, position: 'relative'}}>
+    <View style={mainClass ?? {marginVertical: 15, position: 'relative'}}>
       {label && (
         <Text
           style={
@@ -61,11 +67,16 @@ export const CustomInput = ({
         </View>
       )}
       <TextInput
+        secureTextEntry={secureTextEntry ?? null}
         placeholder={placeholder}
         placeholderTextColor={placeholderColor ?? '#00000080'}
-        style={[styles.inputStyle, {paddingLeft: isPhone ? 45 : 25}]}
+        style={
+          inputClass ?? [styles.inputStyle, {paddingLeft: isPhone ? 45 : 25}]
+        }
         defaultValue={value}
         onChangeText={text => getValue(text)}
+        returnKeyType="next"
+        keyboardType={type ?? 'default'}
       />
       {extras && (
         <Text
@@ -81,9 +92,12 @@ export const CustomInput = ({
         </Text>
       )}
       {icon && (
-        <View style={iconClass ?? {position: 'absolute', right: 20, top: 13}}>
+        <TouchableOpacity
+          disabled={onIconPress ? false : true}
+          onPress={onIconPress}
+          style={iconClass ?? {position: 'absolute', right: 20, top: 13}}>
           {icon}
-        </View>
+        </TouchableOpacity>
       )}
     </View>
   );

@@ -86,6 +86,57 @@ const Welcome = ({route}) => {
                   <Image style={{height: 40, width: 40}} source={user_check} />
                 </View>
                 <TouchableOpacity
+                  onPress={() => navigation.navigate('SignUp')}
+                  style={{
+                    backgroundColor: '#FFECC5',
+                    flex: 1,
+                    flexDirection: 'row',
+                    paddingVertical: 40,
+                    borderRadius: 25,
+                    borderColor: lightTheme.BORDER_MAIN,
+                    borderWidth: 1,
+                  }}>
+                  <View style={{flex: 1, marginLeft: 10}}>
+                    <Text style={{fontFamily: font.BOLD, fontSize: 16}}>
+                      Don't have an account?
+                    </Text>
+                    <Text style={{fontFamily: font.REGULAR, fontSize: 14}}>
+                      Create one with us
+                    </Text>
+                  </View>
+                  <View
+                    style={{
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      marginRight: 10,
+                    }}>
+                    <Icon
+                      name="right"
+                      color={lightTheme.BLACK_TEXT_COLOR}
+                      size={20}
+                      type="antdesign"
+                    />
+                  </View>
+                </TouchableOpacity>
+              </View>
+              <View
+                style={{
+                  backgroundColor: lightTheme.WHITE_COLOR,
+                  flexDirection: 'row',
+                  marginTop: 20,
+                }}>
+                <View
+                  style={{
+                    backgroundColor: '#4A4A4A',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderRadius: 25,
+                    marginRight: 8,
+                    paddingHorizontal: 7,
+                  }}>
+                  <Image style={{height: 40, width: 40}} source={user_check} />
+                </View>
+                <TouchableOpacity
                   onPress={() => navigation.navigate('SignIn')}
                   style={{
                     backgroundColor: '#FCF998',

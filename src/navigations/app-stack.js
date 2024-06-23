@@ -14,6 +14,7 @@ import PasswordSetup from '../screens/user/PasswordSetup';
 import NewPassword from '../screens/user/NewPassword';
 import SetTransactionPin from '../screens/user/SetTransactionPin';
 import AuthSuccess from '../screens/user/AuthSuccess';
+import SignUp from '../screens/user/SignUp';
 
 const Stack = createStackNavigator();
 
@@ -30,6 +31,7 @@ const Route = () => {
         <Stack.Screen name="Splash" component={Splash} />
         <Stack.Screen name="Welcome" component={Welcome} />
         <Stack.Screen name="SignIn" component={SignIn} />
+        <Stack.Screen name="SignUp" component={SignUp} />
         <Stack.Screen name="SignInCode" component={SignInCode} />
         <Stack.Screen name="PasswordSetup" component={PasswordSetup} />
         <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
