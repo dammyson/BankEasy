@@ -108,7 +108,6 @@ const ForgotPassword = () => {
                     fontFamily: font.REGULAR,
                   }}
                   onChangeText={text => setPhoneNumber(text)}
-                  onSubmitEditing={() => console.warn('')}
                 />
               </View>
               <View style={textInputStyles.operation_icon}>

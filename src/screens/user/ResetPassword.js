@@ -104,7 +104,6 @@ const ResetPassword = ({route}) => {
                     fontFamily: font.REGULAR,
                   }}
                   onChangeText={text => setPassword(text)}
-                  onSubmitEditing={() => console.warn('')}
                 />
               </View>
               <View style={textInputStyles.operation_icon}>
@@ -141,7 +140,6 @@ const ResetPassword = ({route}) => {
                     fontFamily: font.REGULAR,
                   }}
                   onChangeText={text => setConfirmPassword(text)}
-                  onSubmitEditing={() => console.warn('')}
                 />
               </View>
               <View style={textInputStyles.operation_icon}>

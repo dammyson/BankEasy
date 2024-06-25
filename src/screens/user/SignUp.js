@@ -18,6 +18,11 @@ import {Container, Content} from 'native-base';
 import {textInputStyles} from '../../theme/TextInputStyle';
 import {CustomInput} from '../../components/CustomInput';
 import {Eye, HideEye} from '../../assets/svgs/General';
+import {useDispatch} from 'react-redux';
+import {baseUrl, processResponse} from '../../utilities/api';
+import {HIDE_LOADER, SHOW_LOADER} from '../../actions/loaderAction';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Alert} from 'react-native';
 
 const SignUp = () => {
   const navigation = useNavigation();
@@ -29,6 +34,9 @@ const SignUp = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [secureTextEntry, setSecureTextEntry] = useState(false);
   const [secureTextEntry2, setSecureTextEntry2] = useState(false);
+  const [isValidMail, setIsValidMail] = useState(false);
+
+  const dispatch = useDispatch();
 
   const updateSecureTextEntry = () => {
     setSecureTextEntry(!secureTextEntry);
@@ -36,6 +44,89 @@ const SignUp = () => {
 
   const updateSecureTextEntry2 = () => {
     setSecureTextEntry2(!secureTextEntry2);
+  };
+
+  const validate = text => {
+    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    if (reg.test(text) === false) {
+      setEmail(text);
+      setIsValidMail(false);
+      return false;
+    } else {
+      setEmail(text);
+      setIsValidMail(true);
+    }
+  };
+
+  const signUpRequest = () => {
+    if (!isValidMail) {
+      Alert.alert(
+        'Validation failed',
+        'Invalid email check the email and try again',
+        [{text: 'Okay'}],
+      );
+      return;
+    } else {
+      if (password === '') {
+        Alert.alert('Validation failed', 'Phone number is invalid', [
+          {text: 'Okay'},
+        ]);
+      } else {
+        dispatch(SHOW_LOADER('Signing up'));
+
+        let formData = JSON.stringify({
+          password: password,
+          firstName: firstName,
+          lastName: lastName,
+          email: email,
+          password: password,
+          phoneNumber: phoneNumber,
+          countryCode: '+234',
+          role: 'ROLE_CUSTOMER',
+        });
+
+        fetch(baseUrl() + '/auth/signup', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+          body: formData,
+        })
+          .then(processResponse)
+          .then(res => {
+            dispatch(HIDE_LOADER());
+
+            const {statusCode, data} = res;
+            if (statusCode === 200) {
+              navigation.navigate('SignIn');
+              setIsValidMail(false);
+              Alert.alert('Success', 'Account creation successful', [
+                {text: 'Okay', onPress: () => navigation.navigate('SignIn')},
+              ]);
+            } else if (statusCode === 400) {
+              Alert.alert('Validation failed', data?.responseMessage, [
+                {text: 'Okay'},
+              ]);
+              AsyncStorage.setItem('token', '');
+            } else {
+              Alert.alert(
+                'Validation failed',
+                'Please check the details you inputted',
+                [{text: 'Okay'}],
+              );
+              AsyncStorage.setItem('token', '');
+            }
+          })
+          .catch(error => {
+            console.log('Api call error');
+            console.warn(error);
+            Alert(error.message);
+            AsyncStorage.setItem('token', '');
+            dispatch(HIDE_LOADER());
+          });
+      }
+    }
   };
 
   return (
@@ -147,8 +238,9 @@ const SignUp = () => {
                 placeholder={'Enter your email address'}
                 placeholderColor={lightTheme.PRIMARY_TEXT_COLOR}
                 value={email}
-                getValue={val => setEmail(val)}
+                getValue={val => validate(val)}
                 inputClass={styles.customInputContainer}
+                type={'email-address'}
               />
               <CustomInput
                 mainClass={{marginVertical: 8, position: 'relative'}}
@@ -163,8 +255,8 @@ const SignUp = () => {
                 type={'number'}
                 placeholder={'Enter your phone number'}
                 placeholderColor={lightTheme.PRIMARY_TEXT_COLOR}
-                value={firstName}
-                getValue={val => setFirstName(val)}
+                value={phoneNumber}
+                getValue={val => setPhoneNumber(val)}
                 inputClass={styles.customInputContainer}
                 icon={
                   <Icon
@@ -226,7 +318,7 @@ const SignUp = () => {
               marginBottom: 10,
             }}>
             <TouchableOpacity
-              onPress={() => navigation.navigate('PhoneNumberConfirmation')}
+              onPress={() => signUpRequest()}
               style={[buttonStyles.primaryButtonStyle]}>
               <Text style={[buttonStyles.primaryActionButtonTextStyle]}>
                 Sign Up

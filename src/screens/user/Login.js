@@ -126,7 +126,6 @@ const SignInCode = ({route}) => {
                     fontFamily: font.REGULAR,
                   }}
                   onChangeText={text => setFirstName(text)}
-                  onSubmitEditing={() => console.warn('')}
                 />
               </View>
               <View style={textInputStyles.operation_icon}>

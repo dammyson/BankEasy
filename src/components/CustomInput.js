@@ -77,6 +77,7 @@ export const CustomInput = ({
         onChangeText={text => getValue(text)}
         returnKeyType="next"
         keyboardType={type ?? 'default'}
+        autoCapitalize="none"
       />
       {extras && (
         <Text

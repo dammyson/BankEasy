@@ -8,22 +8,126 @@ import {
   TouchableOpacity,
   Dimensions,
   StatusBar,
+  Alert,
 } from 'react-native';
 import {lightTheme} from '../../theme/colors';
 import {useNavigation} from '@react-navigation/native';
 import {Icon} from '@rneui/themed';
-import {logo, signin, user_check, user_rate} from '../../assets/images';
+import {signin} from '../../assets/images';
 import {buttonStyles} from '../../theme/ButtonStyle';
 import {font} from '../../constants';
-import {Container, Body, Button, Left, Content} from 'native-base';
-import CodeInput from '../../components/CodeInput';
+import {Container, Content} from 'native-base';
 import {textInputStyles} from '../../theme/TextInputStyle';
 import Checkbox from '../../components/CheckBox';
+import {HIDE_LOADER, SHOW_LOADER} from '../../actions/loaderAction';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {baseUrl, processResponse} from '../../utilities/api';
+import {useDispatch} from 'react-redux';
 
 const SignIn = ({route}) => {
   const navigation = useNavigation();
-  const [firstName, setFirstName] = useState('');
+  const [email, setEmail] = useState('');
   const [checked, setChecked] = useState(false);
+  const [password, setPassword] = useState('');
+  const [phone, setPhone] = useState('');
+  const [isValidMail, setIsValidMail] = useState(false);
+  const [isValidPhone, setIsValidPhone] = useState(false);
+
+  const dispatch = useDispatch();
+
+  const validate = text => {
+    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    if (reg.test(text) === false) {
+      setIsValidMail(false);
+      phoneValidation(text);
+      return false;
+    } else {
+      setEmail(text);
+      setIsValidMail(true);
+    }
+  };
+
+  const phoneValidation = param => {
+    let reg = /^\+?(\d{1,3})?[-.\s]?(\(?\d{3}\)?[-.\s]?)?[\d\-.\s]{7,}$/;
+    if (reg.test(param) === false) {
+      setPhone(param);
+      setIsValidPhone(false);
+    } else {
+      setPhone(param);
+      setIsValidPhone(true);
+    }
+  };
+
+  const signInRequest = () => {
+    if (!isValidMail) {
+      Alert.alert(
+        'Validation failed',
+        'Invalid email check the email and try again',
+        [{text: 'Okay'}],
+      );
+      return;
+    } else {
+      if (password === '') {
+        Alert.alert('Validation failed', 'Phone number is invalid', [
+          {text: 'Okay'},
+        ]);
+      } else {
+        dispatch(SHOW_LOADER('Signing in'));
+
+        let emailData = JSON.stringify({
+          email: email,
+          password: password,
+          appVersion: 'v2.2.1',
+          fcmToken: 'fcmToken',
+        });
+        let phoneData = JSON.stringify({
+          phoneNumber: phone,
+          password: password,
+          appVersion: 'v2.2.1',
+          fcmToken: 'fcmToken',
+        });
+
+        fetch(baseUrl() + '/auth/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+          body: isValidMail ? emailData : isValidPhone ? phoneData : null,
+        })
+          .then(processResponse)
+          .then(res => {
+            dispatch(HIDE_LOADER());
+
+            const {statusCode, data} = res;
+            if (statusCode === 200) {
+              AsyncStorage.setItem('token', data?.data.accessToken);
+              navigation.navigate('Home');
+              setIsValidMail(false);
+            } else if (statusCode === 422) {
+              Alert.alert('Validation failed', 'Phone number already exits', [
+                {text: 'Okay'},
+              ]);
+              AsyncStorage.setItem('token', '');
+            } else {
+              Alert.alert(
+                data?.message,
+                'Please check your email or password and retry',
+                [{text: 'Okay'}],
+              );
+              AsyncStorage.setItem('token', '');
+            }
+          })
+          .catch(error => {
+            console.log('Api call error');
+            console.warn(error);
+            Alert(error.message);
+            AsyncStorage.setItem('token', '');
+            dispatch(HIDE_LOADER());
+          });
+      }
+    }
+  };
 
   return (
     <Container>
@@ -94,8 +198,7 @@ const SignIn = ({route}) => {
                     color: lightTheme.PRIMARY_TEXT_COLOR,
                     fontFamily: font.REGULAR,
                   }}
-                  onChangeText={text => setFirstName(text)}
-                  onSubmitEditing={() => console.warn('')}
+                  onChangeText={text => validate(text)}
                 />
               </View>
               <View style={textInputStyles.operation_icon}>
@@ -132,8 +235,7 @@ const SignIn = ({route}) => {
                     color: lightTheme.PRIMARY_TEXT_COLOR,
                     fontFamily: font.REGULAR,
                   }}
-                  onChangeText={text => setFirstName(text)}
-                  onSubmitEditing={() => console.warn('')}
+                  onChangeText={text => setPassword(text)}
                 />
               </View>
               <View style={textInputStyles.operation_icon}>
@@ -174,7 +276,7 @@ const SignIn = ({route}) => {
               marginBottom: 10,
             }}>
             <TouchableOpacity
-              onPress={() => navigation.navigate('Home')}
+              onPress={() => signInRequest()}
               style={[buttonStyles.primaryButtonStyle]}>
               <Text style={[buttonStyles.primaryActionButtonTextStyle]}>
                 Sign In
@@ -192,7 +294,7 @@ export default SignIn;
 const styles = StyleSheet.create({
   container: {
     height:
-      Dimensions.get('window').height - Dimensions.get('window').height / 3,
+      Dimensions.get('window').height - Dimensions.get('window').height / 2.8,
     width: Dimensions.get('window').width,
     backgroundColor: '#FFF',
   },

@@ -164,7 +164,10 @@ const Profile = () => {
                 marginBottom: 20,
               }}>
               {items.last.map(item => (
-                <List item={item} />
+                <List
+                  onPress={() => navigation.navigate(item.page)}
+                  item={item}
+                />
               ))}
             </View>
           </View>
@@ -303,7 +306,7 @@ const items = {
       icon_name: 'exit-outline',
       icon_type: 'ionicon',
       number: '40',
-      page: 'Login',
+      page: 'SignIn',
     },
   ],
 };

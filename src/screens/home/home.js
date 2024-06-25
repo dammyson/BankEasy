@@ -18,6 +18,7 @@ import {location, monie_point, no_transaction} from '../../assets/images';
 import {TransferList} from './transferList';
 import {Cards} from '../../components/Card';
 import {Location} from '../../assets/svgs/General';
+import {getToken} from '../../utilities';
 
 const defaultAuthState = {
   hasLoggedInOnce: false,
@@ -30,6 +31,13 @@ const defaultAuthState = {
 const Home = () => {
   const [index, setIndex] = useState(0);
   const navigation = useNavigation();
+  const [token, setToken] = useState(null);
+
+  getToken().then(value => {
+    setToken(value);
+  });
+
+  console.warn(token);
 
   return (
     <Container style={{backgroundColor: lightTheme.WHITE_COLOR}}>
