@@ -3,7 +3,6 @@ import {
   Text,
   StyleSheet,
   View,
-  TextInput,
   TouchableOpacity,
   Dimensions,
   StatusBar,
@@ -11,18 +10,15 @@ import {
 import {lightTheme} from '../../theme/colors';
 import {useNavigation} from '@react-navigation/native';
 import {Icon} from '@rneui/themed';
-import {logo, user_check, user_rate} from '../../assets/images';
 import {buttonStyles} from '../../theme/ButtonStyle';
 import {font} from '../../constants';
-import {Container, Body, Button, Left, Content} from 'native-base';
+import {Container, Content} from 'native-base';
 import CodeInput from '../../components/CodeInput';
-import {textInputStyles} from '../../theme/TextInputStyle';
-import LinearGradient from 'react-native-linear-gradient';
 
-const SignInCode = ({route}) => {
+const PhoneNumberConfirmation = () => {
   const navigation = useNavigation();
-  const [firstName, setFirstName] = useState('');
   const [code, setCode] = useState('');
+  const [counterId, setCounterId] = useState(null);
 
   return (
     <Container>
@@ -58,12 +54,12 @@ const SignInCode = ({route}) => {
             <View style={{flex: 1}}>
               <Text
                 style={{
-                  color: lightTheme.HEADER_MAIN,
+                  color: lightTheme.BLACK_TEXT_COLOR,
                   fontFamily: font.BOLD,
-                  fontSize: 24,
+                  fontSize: 20,
                   marginBottom: 2,
                 }}>
-                Create account
+                Confirm your Phone Number
               </Text>
             </View>
           </View>
@@ -78,24 +74,14 @@ const SignInCode = ({route}) => {
             }}>
             <Text
               style={{
-                color: lightTheme.HEADER_MAIN,
-                fontFamily: font.BOLD,
-                fontSize: 28,
-                marginBottom: 2,
-                marginTop: 2,
-              }}>
-              Use invitation code
-            </Text>
-            <Text
-              style={{
-                color: lightTheme.NEUTRAL_MAIN,
+                color: lightTheme.BLACK_TEXT_COLOR,
                 fontFamily: font.REGULAR,
                 fontSize: 16,
                 marginBottom: 2,
                 marginTop: 10,
               }}>
-              Enter the invitation code you have received below to continue
-              signing in to your account
+              An OTP has been sent to your number ending in *4568 enter it to
+              reset your password
             </Text>
           </View>
 
@@ -107,68 +93,49 @@ const SignInCode = ({route}) => {
                 justifyContent: 'flex-start',
                 marginBottom: 5,
               }}>
-              <Text style={styles.inputLabel}>Phone Number </Text>
-            </View>
-
-            <View style={styles.textInputContainer}>
-              <View style={styles.input}>
-                <TextInput
-                  placeholder="Enter your Phone Number "
-                  placeholderTextColor={lightTheme.PRIMARY_TEXT_COLOR}
-                  returnKeyType="next"
-                  keyboardType="default"
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  style={{
-                    flex: 1,
-                    fontSize: 14,
-                    color: lightTheme.PRIMARY_TEXT_COLOR,
-                    fontFamily: font.REGULAR,
-                  }}
-                  onChangeText={text => setFirstName(text)}
-                />
-              </View>
-              <View style={textInputStyles.operation_icon}>
-                <Icon
-                  name="phone-outline"
-                  type="material-community"
-                  color="grey"
-                  size={20}
-                />
-              </View>
-            </View>
-            <View
-              style={{
-                marginLeft: 20,
-                marginRight: 20,
-                justifyContent: 'flex-start',
-                marginBottom: 5,
-              }}>
-              <Text style={styles.inputLabel}>Enter invitation code </Text>
+              <Text style={styles.inputLabel}>Enter code </Text>
             </View>
             <View style={{}}>
               <CodeInput onChangeText={txt => setCode(txt)} />
             </View>
+            <View
+              style={{
+                marginRight: 20,
+                marginLeft: 20,
+                marginTop: 10,
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}>
+              <TouchableOpacity onPress={() => setCounterId(2 * Math.random())}>
+                <Text
+                  style={{
+                    color: lightTheme.ORANGE,
+                    fontWeight: 500,
+                    textDecorationLine: 'underline',
+                  }}>
+                  Resend OTP
+                </Text>
+              </TouchableOpacity>
+              <View
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}>
+                <Text style={{color: '#DADADA', fontWeight: 500, fontSize: 16}}>
+                  Expires in
+                </Text>
+              </View>
+            </View>
           </View>
           <View style={{marginLeft: 20, marginRight: 20, marginBottom: 10}}>
             <TouchableOpacity
-              onPress={() => navigation.navigate('PasswordSetup')}>
-              <LinearGradient
-                colors={['#4A463C', '#232323']}
-                useAngle={true}
-                style={{
-                  height: 62,
-                  borderRadius: 10,
-                  marginTop: 10,
-                  marginBottom: 10,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
-                angle={45}>
-                <Text style={[buttonStyles.primaryActionButtonTextStyle]}>
-                  Continue
-                </Text>
-              </LinearGradient>
+              onPress={() => navigation.navigate('ResetPassword')}
+              style={[buttonStyles.primaryButtonStyle]}>
+              <Text style={[buttonStyles.primaryActionButtonTextStyle]}>
+                Enter
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -177,7 +144,7 @@ const SignInCode = ({route}) => {
   );
 };
 
-export default SignInCode;
+export default PhoneNumberConfirmation;
 
 const styles = StyleSheet.create({
   container: {

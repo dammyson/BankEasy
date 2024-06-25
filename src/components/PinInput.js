@@ -10,10 +10,14 @@ import {
 
 import styles, {
   ACTIVE_CELL_BG_COLOR,
+  ACTIVE_PIN_BG_COLOR,
   CELL_BORDER_RADIUS,
   CELL_SIZE,
   DEFAULT_CELL_BG_COLOR,
   NOT_EMPTY_CELL_BG_COLOR,
+  NOT_EMPTY_PIN_BG_COLOR,
+  PIN_CELL_BR,
+  PIN_SIZE,
 } from './styles';
 
 const {Value, Text: AnimatedText} = Animated;
@@ -38,8 +42,8 @@ const animateCell = ({hasValue, index, isFocused}) => {
   ]).start();
 };
 
-const AnimatedExample = ({onChangeText}) => {
-  const [value, setValue] = useState('');
+const PinInput = ({onChangeText, pin}) => {
+  const [value, setValue] = useState(pin);
 
   const ref = useBlurOnFulfill({value, cellCount: CELL_COUNT});
   const [props, getCellOnLayoutHandler] = useClearByFocusCell({
@@ -53,21 +57,18 @@ const AnimatedExample = ({onChangeText}) => {
       backgroundColor: hasValue
         ? animationsScale[index].interpolate({
             inputRange: [0, 1],
-            outputRange: [NOT_EMPTY_CELL_BG_COLOR, ACTIVE_CELL_BG_COLOR],
+            outputRange: [NOT_EMPTY_PIN_BG_COLOR, ACTIVE_PIN_BG_COLOR],
           })
         : animationsColor[index].interpolate({
             inputRange: [0, 1],
             outputRange: [DEFAULT_CELL_BG_COLOR, ACTIVE_CELL_BG_COLOR],
           }),
-      borderRadius: animationsScale[index].interpolate({
-        inputRange: [0, 1],
-        outputRange: [CELL_SIZE, CELL_BORDER_RADIUS],
-      }),
+      borderRadius: hasValue ? 20 : PIN_CELL_BR,
       transform: [
         {
           scale: animationsScale[index].interpolate({
             inputRange: [0, 1],
-            outputRange: [0.2, 1],
+            outputRange: [0.8, 1],
           }),
         },
       ],
@@ -82,7 +83,7 @@ const AnimatedExample = ({onChangeText}) => {
     return (
       <AnimatedText
         key={index}
-        style={[styles.cell, animatedCellStyle]}
+        style={[styles.pinCell, animatedCellStyle]}
         onLayout={getCellOnLayoutHandler(index)}>
         {symbol || (isFocused ? <Cursor /> : null)}
       </AnimatedText>
@@ -100,7 +101,7 @@ const AnimatedExample = ({onChangeText}) => {
       value={value}
       onChangeText={text => updateText(text)}
       cellCount={CELL_COUNT}
-      rootStyle={styles.codeFieldRoot}
+      rootStyle={styles.pinFieldRoot}
       keyboardType="number-pad"
       textContentType="oneTimeCode"
       renderCell={renderCell}
@@ -108,4 +109,4 @@ const AnimatedExample = ({onChangeText}) => {
   );
 };
 
-export default AnimatedExample;
+export default PinInput;

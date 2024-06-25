@@ -11,18 +11,14 @@ import {
 import {lightTheme} from '../../theme/colors';
 import {useNavigation} from '@react-navigation/native';
 import {Icon} from '@rneui/themed';
-import {logo, user_check, user_rate} from '../../assets/images';
 import {buttonStyles} from '../../theme/ButtonStyle';
 import {font} from '../../constants';
-import {Container, Body, Button, Left, Content} from 'native-base';
-import CodeInput from '../../components/CodeInput';
+import {Container, Content} from 'native-base';
 import {textInputStyles} from '../../theme/TextInputStyle';
-import LinearGradient from 'react-native-linear-gradient';
 
-const SignInCode = ({route}) => {
+const ForgotPassword = () => {
   const navigation = useNavigation();
-  const [firstName, setFirstName] = useState('');
-  const [code, setCode] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
 
   return (
     <Container>
@@ -58,16 +54,15 @@ const SignInCode = ({route}) => {
             <View style={{flex: 1}}>
               <Text
                 style={{
-                  color: lightTheme.HEADER_MAIN,
+                  color: lightTheme.BLACK_TEXT_COLOR,
                   fontFamily: font.BOLD,
-                  fontSize: 24,
+                  fontSize: 22,
                   marginBottom: 2,
                 }}>
-                Create account
+                Forgot password
               </Text>
             </View>
           </View>
-
           <View
             style={{
               marginLeft: 20,
@@ -78,34 +73,21 @@ const SignInCode = ({route}) => {
             }}>
             <Text
               style={{
-                color: lightTheme.HEADER_MAIN,
-                fontFamily: font.BOLD,
-                fontSize: 28,
-                marginBottom: 2,
-                marginTop: 2,
-              }}>
-              Use invitation code
-            </Text>
-            <Text
-              style={{
-                color: lightTheme.NEUTRAL_MAIN,
+                color: lightTheme.BLACK_TEXT_COLOR,
                 fontFamily: font.REGULAR,
                 fontSize: 16,
                 marginBottom: 2,
                 marginTop: 10,
               }}>
-              Enter the invitation code you have received below to continue
-              signing in to your account
+              Enter the phone number tied to your account to reset your password
             </Text>
           </View>
-
           <View style={{flex: 1}}>
             <View
               style={{
                 marginLeft: 20,
                 marginRight: 20,
                 justifyContent: 'flex-start',
-                marginBottom: 5,
               }}>
               <Text style={styles.inputLabel}>Phone Number </Text>
             </View>
@@ -125,7 +107,7 @@ const SignInCode = ({route}) => {
                     color: lightTheme.PRIMARY_TEXT_COLOR,
                     fontFamily: font.REGULAR,
                   }}
-                  onChangeText={text => setFirstName(text)}
+                  onChangeText={text => setPhoneNumber(text)}
                 />
               </View>
               <View style={textInputStyles.operation_icon}>
@@ -137,38 +119,20 @@ const SignInCode = ({route}) => {
                 />
               </View>
             </View>
-            <View
-              style={{
-                marginLeft: 20,
-                marginRight: 20,
-                justifyContent: 'flex-start',
-                marginBottom: 5,
-              }}>
-              <Text style={styles.inputLabel}>Enter invitation code </Text>
-            </View>
-            <View style={{}}>
-              <CodeInput onChangeText={txt => setCode(txt)} />
-            </View>
           </View>
-          <View style={{marginLeft: 20, marginRight: 20, marginBottom: 10}}>
+
+          <View
+            style={{
+              marginLeft: 20,
+              marginRight: 20,
+              marginBottom: 10,
+            }}>
             <TouchableOpacity
-              onPress={() => navigation.navigate('PasswordSetup')}>
-              <LinearGradient
-                colors={['#4A463C', '#232323']}
-                useAngle={true}
-                style={{
-                  height: 62,
-                  borderRadius: 10,
-                  marginTop: 10,
-                  marginBottom: 10,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
-                angle={45}>
-                <Text style={[buttonStyles.primaryActionButtonTextStyle]}>
-                  Continue
-                </Text>
-              </LinearGradient>
+              onPress={() => navigation.navigate('PhoneNumberConfirmation')}
+              style={[buttonStyles.primaryButtonStyle]}>
+              <Text style={[buttonStyles.primaryActionButtonTextStyle]}>
+                Enter
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -177,13 +141,14 @@ const SignInCode = ({route}) => {
   );
 };
 
-export default SignInCode;
+export default ForgotPassword;
 
 const styles = StyleSheet.create({
   container: {
     height: Dimensions.get('window').height - 100,
     width: Dimensions.get('window').width,
     backgroundColor: '#FFF',
+    position: 'relative',
   },
   textInputContainer: {
     marginRight: 20,

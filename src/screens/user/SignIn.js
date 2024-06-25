@@ -1,37 +1,185 @@
-import React from 'react'
-import { Text, StyleSheet, Image, View, TextInput, TouchableOpacity, Dimensions, StatusBar } from 'react-native'
-import { lightTheme } from '../../theme/colors'
-import { useNavigation, } from '@react-navigation/native';
-import { Icon } from '@rneui/themed'
-import { logo, signin, user_check, user_rate } from '../../assets/images';
-import { buttonStyles } from '../../theme/ButtonStyle';
-import { font } from '../../constants';
-import { Container, Body, Button, Left, Content, } from 'native-base';
-import CodeInput from '../../components/CodeInput';
-import { textInputStyles } from '../../theme/TextInputStyle';
+import React, {useState} from 'react';
+import {
+  Text,
+  StyleSheet,
+  Image,
+  View,
+  TextInput,
+  TouchableOpacity,
+  Dimensions,
+  StatusBar,
+  Alert,
+} from 'react-native';
+import {lightTheme} from '../../theme/colors';
+import {useNavigation} from '@react-navigation/native';
+import {Icon} from '@rneui/themed';
+import {signin} from '../../assets/images';
+import {buttonStyles} from '../../theme/ButtonStyle';
+import {font} from '../../constants';
+import {Container, Content} from 'native-base';
+import {textInputStyles} from '../../theme/TextInputStyle';
+import Checkbox from '../../components/CheckBox';
+import {HIDE_LOADER, SHOW_LOADER} from '../../actions/loaderAction';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {baseUrl, processResponse} from '../../utilities/api';
+import {useDispatch} from 'react-redux';
 
-
-const SignIn = ({ route }) => {
+const SignIn = ({route}) => {
   const navigation = useNavigation();
+  const [email, setEmail] = useState('');
+  const [checked, setChecked] = useState(false);
+  const [password, setPassword] = useState('');
+  const [phone, setPhone] = useState('');
+  const [isValidMail, setIsValidMail] = useState(false);
+  const [isValidPhone, setIsValidPhone] = useState(false);
+
+  const dispatch = useDispatch();
+
+  const validate = text => {
+    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    if (reg.test(text) === false) {
+      setIsValidMail(false);
+      phoneValidation(text);
+      return false;
+    } else {
+      setEmail(text);
+      setIsValidMail(true);
+    }
+  };
+
+  const phoneValidation = param => {
+    let reg = /^\+?(\d{1,3})?[-.\s]?(\(?\d{3}\)?[-.\s]?)?[\d\-.\s]{7,}$/;
+    if (reg.test(param) === false) {
+      setPhone(param);
+      setIsValidPhone(false);
+    } else {
+      setPhone(param);
+      setIsValidPhone(true);
+    }
+  };
+
+  const signInRequest = () => {
+    if (!isValidMail) {
+      Alert.alert(
+        'Validation failed',
+        'Invalid email check the email and try again',
+        [{text: 'Okay'}],
+      );
+      return;
+    } else {
+      if (password === '') {
+        Alert.alert('Validation failed', 'Phone number is invalid', [
+          {text: 'Okay'},
+        ]);
+      } else {
+        dispatch(SHOW_LOADER('Signing in'));
+
+        let emailData = JSON.stringify({
+          email: email,
+          password: password,
+          appVersion: 'v2.2.1',
+          fcmToken: 'fcmToken',
+        });
+        let phoneData = JSON.stringify({
+          phoneNumber: phone,
+          password: password,
+          appVersion: 'v2.2.1',
+          fcmToken: 'fcmToken',
+        });
+
+        fetch(baseUrl() + '/auth/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+          body: isValidMail ? emailData : isValidPhone ? phoneData : null,
+        })
+          .then(processResponse)
+          .then(res => {
+            dispatch(HIDE_LOADER());
+
+            const {statusCode, data} = res;
+            if (statusCode === 200) {
+              AsyncStorage.setItem('token', data?.data.accessToken);
+              navigation.navigate('Home');
+              setIsValidMail(false);
+            } else if (statusCode === 422) {
+              Alert.alert('Validation failed', 'Phone number already exits', [
+                {text: 'Okay'},
+              ]);
+              AsyncStorage.setItem('token', '');
+            } else {
+              Alert.alert(
+                data?.message,
+                'Please check your email or password and retry',
+                [{text: 'Okay'}],
+              );
+              AsyncStorage.setItem('token', '');
+            }
+          })
+          .catch(error => {
+            console.log('Api call error');
+            console.warn(error);
+            Alert(error.message);
+            AsyncStorage.setItem('token', '');
+            dispatch(HIDE_LOADER());
+          });
+      }
+    }
+  };
 
   return (
     <Container>
       <StatusBar backgroundColor="transparent" barStyle="dark-content" />
 
-      <Image style={{ height: Dimensions.get('window').height / 3, width: Dimensions.get('window').width }} source={signin} />
+      <Image
+        style={{
+          height: Dimensions.get('window').height / 3,
+          width: Dimensions.get('window').width,
+        }}
+        source={signin}
+      />
       <Content>
         <View style={styles.container}>
-
-
-
-          <View style={{ marginLeft: 20, marginRight: 20, justifyContent: 'center', alignItems: 'center', marginBottom: 15, marginTop: 20 }}>
-            <Text style={{ color: lightTheme.BLACK_TEXT_COLOR, fontFamily: font.BOLD, fontSize: 24, marginBottom: 2, marginTop: 2 }}>Welcome!</Text>
-            <Text style={{ color: lightTheme.BLACK_TEXT_COLOR, fontFamily: font.REGULAR, fontSize: 16, marginBottom: 2, marginTop: 10 }}>Enjoy easy banking by signing In</Text>
+          <View
+            style={{
+              marginLeft: 20,
+              marginRight: 20,
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginBottom: 15,
+              marginTop: 20,
+            }}>
+            <Text
+              style={{
+                color: lightTheme.BLACK_TEXT_COLOR,
+                fontFamily: font.BOLD,
+                fontSize: 24,
+                marginBottom: 2,
+                marginTop: 2,
+              }}>
+              Welcome!
+            </Text>
+            <Text
+              style={{
+                color: lightTheme.BLACK_TEXT_COLOR,
+                fontFamily: font.REGULAR,
+                fontSize: 16,
+                marginBottom: 2,
+                marginTop: 10,
+              }}>
+              Enjoy easy banking by signing In
+            </Text>
           </View>
 
-          <View style={{ flex: 1, }}>
-
-            <View style={{ marginLeft: 20, marginRight: 20, justifyContent: 'flex-start',}}>
+          <View style={{flex: 1}}>
+            <View
+              style={{
+                marginLeft: 20,
+                marginRight: 20,
+                justifyContent: 'flex-start',
+              }}>
               <Text style={styles.inputLabel}>Email/Phone Number </Text>
             </View>
 
@@ -41,26 +189,34 @@ const SignIn = ({ route }) => {
                   placeholder="Enter your Email or Phone Number "
                   placeholderTextColor={lightTheme.PRIMARY_TEXT_COLOR}
                   returnKeyType="next"
-                  keyboardType='default'
+                  keyboardType="default"
                   autoCapitalize="none"
                   autoCorrect={false}
-                  style={{ flex: 1, fontSize: 14, color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.REGULAR, }}
-                  onChangeText={(text) => setFirstName(text)}
-                  onSubmitEditing={() => console.warn("")}
+                  style={{
+                    flex: 1,
+                    fontSize: 14,
+                    color: lightTheme.PRIMARY_TEXT_COLOR,
+                    fontFamily: font.REGULAR,
+                  }}
+                  onChangeText={text => validate(text)}
                 />
               </View>
               <View style={textInputStyles.operation_icon}>
                 <Icon
                   name="phone-outline"
-                  type='material-community'
+                  type="material-community"
                   color="grey"
                   size={20}
                 />
               </View>
-
             </View>
 
-            <View style={{ marginLeft: 20, marginRight: 20, justifyContent: 'flex-start', }}>
+            <View
+              style={{
+                marginLeft: 20,
+                marginRight: 20,
+                justifyContent: 'flex-start',
+              }}>
               <Text style={styles.inputLabel}>Password </Text>
             </View>
 
@@ -70,50 +226,77 @@ const SignIn = ({ route }) => {
                   placeholder="Enter your Password"
                   placeholderTextColor={lightTheme.PRIMARY_TEXT_COLOR}
                   returnKeyType="next"
-                  keyboardType='default'
+                  keyboardType="default"
                   autoCapitalize="none"
                   autoCorrect={false}
-                  style={{ flex: 1, fontSize: 14, color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.REGULAR, }}
-                  onChangeText={(text) => setFirstName(text)}
-                  onSubmitEditing={() => console.warn("")}
+                  style={{
+                    flex: 1,
+                    fontSize: 14,
+                    color: lightTheme.PRIMARY_TEXT_COLOR,
+                    fontFamily: font.REGULAR,
+                  }}
+                  onChangeText={text => setPassword(text)}
                 />
               </View>
               <View style={textInputStyles.operation_icon}>
                 <Icon
                   name="eye-outline"
-                  type='material-community'
+                  type="material-community"
                   color="grey"
                   size={20}
                 />
               </View>
-
             </View>
-
-
+            <View
+              style={{
+                marginRight: 20,
+                marginLeft: 20,
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}>
+              <Checkbox
+                isChecked={checked}
+                text="Remember password"
+                onPress={() => setChecked(!checked)}
+              />
+              <TouchableOpacity
+                onPress={() => navigation.navigate('ForgotPassword')}>
+                <Text style={{color: lightTheme.ORANGE, fontWeight: 500}}>
+                  Forgot Password
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
-         
-          <View style={{ marginLeft: 20, marginRight: 20, marginBottom: 10, }}>
-            <TouchableOpacity onPress={() => navigation.navigate('Register')} style={[buttonStyles.primaryButtonStyle,]}>
-              <Text style={[buttonStyles.primaryActionButtonTextStyle]}>Sign Up</Text>
+
+          <View
+            style={{
+              marginLeft: 20,
+              marginRight: 20,
+              marginBottom: 10,
+            }}>
+            <TouchableOpacity
+              onPress={() => signInRequest()}
+              style={[buttonStyles.primaryButtonStyle]}>
+              <Text style={[buttonStyles.primaryActionButtonTextStyle]}>
+                Sign In
+              </Text>
             </TouchableOpacity>
-
-
           </View>
-
         </View>
       </Content>
     </Container>
-  )
-}
+  );
+};
 
-export default SignIn
-
+export default SignIn;
 
 const styles = StyleSheet.create({
   container: {
-    height: Dimensions.get('window').height - Dimensions.get('window').height / 3,
+    height:
+      Dimensions.get('window').height - Dimensions.get('window').height / 2.8,
     width: Dimensions.get('window').width,
-    backgroundColor: '#FFF'
+    backgroundColor: '#FFF',
   },
   textInputContainer: {
     marginRight: 20,
@@ -125,19 +308,18 @@ const styles = StyleSheet.create({
     borderColor: lightTheme.OFF_WHITE_COLOR,
     borderRadius: 10,
     flexDirection: 'row',
-    paddingLeft: 5
-
+    paddingLeft: 5,
   },
 
   input: {
     flex: 1,
-    marginLeft: 5
+    marginLeft: 5,
   },
   inputLabel: {
     color: lightTheme.OFF_WHITE_COLOR,
     fontFamily: font.REGULAR,
     fontSize: 14,
     marginBottom: 2,
-    marginTop: 2
-  }
+    marginTop: 2,
+  },
 });
