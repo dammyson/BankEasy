@@ -101,6 +101,9 @@ const SignIn = ({route}) => {
 
             const {statusCode, data} = res;
             if (statusCode === 200) {
+              setEmail('');
+              setPassword('');
+              setPhone('');
               AsyncStorage.setItem('token', data?.data.accessToken);
               navigation.navigate('Home');
               setIsValidMail(false);
@@ -192,6 +195,7 @@ const SignIn = ({route}) => {
                   keyboardType="default"
                   autoCapitalize="none"
                   autoCorrect={false}
+                  defaultValue={email}
                   style={{
                     flex: 1,
                     fontSize: 14,
@@ -229,6 +233,7 @@ const SignIn = ({route}) => {
                   keyboardType="default"
                   autoCapitalize="none"
                   autoCorrect={false}
+                  defaultValue={password}
                   style={{
                     flex: 1,
                     fontSize: 14,
