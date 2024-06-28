@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -8,6 +8,7 @@ import {
   StatusBar,
   PixelRatio,
   Image,
+  Alert,
 } from 'react-native';
 import {lightTheme} from '../../theme/colors';
 import {font, transferHistory} from '../../constants';
@@ -19,6 +20,8 @@ import {TransferList} from './transferList';
 import {Cards} from '../../components/Card';
 import {Location} from '../../assets/svgs/General';
 import {getToken} from '../../utilities';
+import {baseUrl, processResponse} from '../../utilities/api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const defaultAuthState = {
   hasLoggedInOnce: false,
@@ -32,12 +35,54 @@ const Home = () => {
   const [index, setIndex] = useState(0);
   const navigation = useNavigation();
   const [token, setToken] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [profile, setProfile] = useState(null);
 
   getToken().then(value => {
     setToken(value);
   });
 
-  console.warn(token);
+  useEffect(() => {
+    if (token !== null) {
+      getProfile();
+    }
+  }, [token]);
+
+  const getProfile = useCallback(() => {
+    setLoading(true);
+    fetch(baseUrl() + '/auth/profile', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then(processResponse)
+      .then(res => {
+        const {statusCode, data} = res;
+        if (statusCode === 200) {
+          setLoading(false);
+          AsyncStorage.setItem('user', JSON.stringify(data?.data));
+          setProfile(data?.data);
+        } else if (statusCode === 422) {
+          setLoading(false);
+          Alert.alert('Validation failed', data?.message, [{text: 'Okay'}]);
+          setProfile(null);
+        } else {
+          setLoading(false);
+          Alert.alert('Operation failed', data?.message, [{text: 'Okay'}]);
+          setProfile(null);
+        }
+      })
+      .catch(error => {
+        console.log('Api call error');
+        console.warn(error);
+        setLoading(false);
+        Alert.alert(error.message);
+        setProfile(null);
+      });
+  }, [token]);
 
   return (
     <Container style={{backgroundColor: lightTheme.WHITE_COLOR}}>
@@ -74,8 +119,10 @@ const Home = () => {
               paddingHorizontal: 15,
             }}>
             <View style={{flex: 1, flexDirection: 'row'}}>
-              <Text style={{fontSize: 16, fontWeight: 400}}>Welcome,</Text>
-              <Text style={{fontWeight: 700, fontSize: 16}}> Deji Adeyemi</Text>
+              <Text style={{fontSize: 16, fontWeight: 400}}>Welcome, </Text>
+              <Text style={{fontWeight: 700, fontSize: 16}}>
+                {profile?.firstName} {profile?.lastName}
+              </Text>
             </View>
             <Image
               style={{height: 32, width: 32, borderRadius: 25}}

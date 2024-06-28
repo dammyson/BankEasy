@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -20,6 +20,7 @@ import {globalStyles} from '../../theme/GlobalStyle';
 import CustomModal from '../../components/CustomModal';
 import {Stopper} from '../../assets/svgs/General';
 import {Rows} from '../home/rows';
+import {getUser} from '../../utilities';
 
 const defaultAuthState = {
   hasLoggedInOnce: false,
@@ -33,6 +34,11 @@ const Profile = () => {
   const deviceHeight = useWindowDimensions().height;
   const navigation = useNavigation();
   const [modal, setModal] = useState(null);
+  const [user, setUser] = useState(null);
+
+  getUser().then(value => {
+    setUser(JSON.parse(value));
+  });
 
   return (
     <Container style={{backgroundColor: lightTheme.WHITE_COLOR}}>
@@ -84,46 +90,55 @@ const Profile = () => {
           source={dark_logo}
         />
       </View>
-      <View>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'center',
-            marginTop: 30,
-          }}>
+      {user !== null && (
+        <View>
           <View
             style={{
-              backgroundColor: lightTheme.CREAM,
-              width: 120,
-              height: 120,
               flexDirection: 'row',
               justifyContent: 'center',
-              alignItems: 'center',
-              borderRadius: 60,
+              marginTop: 30,
             }}>
-            <Text
+            <View
               style={{
-                color: lightTheme.ORANGE,
-                fontSize: 60,
-                fontWeight: 500,
+                backgroundColor: lightTheme.CREAM,
+                width: 120,
+                height: 120,
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center',
+                borderRadius: 60,
               }}>
-              DA
-            </Text>
+              <Text
+                style={{
+                  color: lightTheme.ORANGE,
+                  fontSize: 60,
+                  fontWeight: 500,
+                }}>
+                {user.firstName.charAt(0)}
+                {user.lastName.charAt(0)}
+              </Text>
+            </View>
           </View>
+          <Text
+            style={{
+              textAlign: 'center',
+              fontSize: 16,
+              fontWeight: 400,
+              marginTop: 15,
+            }}>
+            You are signed in as
+          </Text>
+          <Text
+            style={{
+              textAlign: 'center',
+              fontSize: 30,
+              fontWeight: 600,
+              color: lightTheme.BLACK_TEXT_COLOR,
+            }}>
+            {user.firstName} {user?.lastName}
+          </Text>
         </View>
-        <Text
-          style={{
-            textAlign: 'center',
-            fontSize: 16,
-            fontWeight: 400,
-            marginTop: 15,
-          }}>
-          You are signed in as
-        </Text>
-        <Text style={{textAlign: 'center', fontSize: 30, fontWeight: 600}}>
-          Deji Adeyemi
-        </Text>
-      </View>
+      )}
       <Content>
         <View style={styles.container}>
           <View style={{marginTop: 20, marginHorizontal: 20, marginBottom: 40}}>
