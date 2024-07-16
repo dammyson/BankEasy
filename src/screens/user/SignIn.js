@@ -108,9 +108,7 @@ const SignIn = ({route}) => {
               navigation.navigate('Home');
               setIsValidMail(false);
             } else if (statusCode === 422) {
-              Alert.alert('Validation failed', 'Phone number already exits', [
-                {text: 'Okay'},
-              ]);
+              Alert.alert('Validation failed', data.message, [{text: 'Okay'}]);
               AsyncStorage.setItem('token', '');
             } else {
               Alert.alert(
