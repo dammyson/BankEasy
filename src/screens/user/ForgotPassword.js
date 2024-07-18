@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Dimensions,
   StatusBar,
+  Alert,
 } from 'react-native';
 import {lightTheme} from '../../theme/colors';
 import {useNavigation} from '@react-navigation/native';
@@ -15,10 +16,73 @@ import {buttonStyles} from '../../theme/ButtonStyle';
 import {font} from '../../constants';
 import {Container, Content} from 'native-base';
 import {textInputStyles} from '../../theme/TextInputStyle';
+import {baseUrl, processResponse} from '../../utilities/api';
+import {useDispatch} from 'react-redux';
+import {HIDE_LOADER, SHOW_LOADER} from '../../actions/loaderAction';
 
 const ForgotPassword = () => {
   const navigation = useNavigation();
   const [phoneNumber, setPhoneNumber] = useState('');
+  const [isValidPhone, setIsValidPhone] = useState(false);
+  const dispatch = useDispatch();
+
+  const phoneValidation = param => {
+    let reg = /^\+?(\d{1,3})?[-.\s]?(\(?\d{3}\)?[-.\s]?)?[\d\-.\s]{7,}$/;
+    if (reg.test(param) === false) {
+      setPhoneNumber(param);
+      setIsValidPhone(false);
+    } else {
+      setPhoneNumber(param);
+      setIsValidPhone(true);
+    }
+  };
+
+  const forgotPasswordRequest = () => {
+    if (!isValidPhone) {
+      Alert.alert('Validation failed', 'Enter a valid phone number', [
+        {text: 'Okay'},
+      ]);
+      return;
+    } else {
+      dispatch(SHOW_LOADER('Checking phone number'));
+
+      let payload = JSON.stringify({
+        phoneNumber: phoneNumber,
+        verificationType: 'phoneNumber',
+      });
+
+      fetch(baseUrl() + '/auth/forgot-password', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: payload,
+      })
+        .then(processResponse)
+        .then(res => {
+          dispatch(HIDE_LOADER());
+
+          const {statusCode, data} = res;
+          console.warn(res);
+          if (statusCode === 200) {
+            navigation.navigate('PhoneNumberConfirmation', {
+              phoneNumber: phoneNumber,
+            });
+          } else if (statusCode === 422) {
+            Alert.alert('Validation failed', data.message, [{text: 'Okay'}]);
+          } else {
+            Alert.alert('Operation failed', data.message, [{text: 'Okay'}]);
+          }
+        })
+        .catch(error => {
+          console.log('Api call error');
+          console.warn(error);
+          Alert(error.message);
+          dispatch(HIDE_LOADER());
+        });
+    }
+  };
 
   return (
     <Container>
@@ -107,7 +171,7 @@ const ForgotPassword = () => {
                     color: lightTheme.PRIMARY_TEXT_COLOR,
                     fontFamily: font.REGULAR,
                   }}
-                  onChangeText={text => setPhoneNumber(text)}
+                  onChangeText={text => phoneValidation(text)}
                 />
               </View>
               <View style={textInputStyles.operation_icon}>
@@ -128,7 +192,7 @@ const ForgotPassword = () => {
               marginBottom: 10,
             }}>
             <TouchableOpacity
-              onPress={() => navigation.navigate('PhoneNumberConfirmation')}
+              onPress={() => forgotPasswordRequest()}
               style={[buttonStyles.primaryButtonStyle]}>
               <Text style={[buttonStyles.primaryActionButtonTextStyle]}>
                 Enter

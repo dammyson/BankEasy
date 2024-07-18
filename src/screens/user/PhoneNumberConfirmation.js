@@ -15,10 +15,12 @@ import {font} from '../../constants';
 import {Container, Content} from 'native-base';
 import CodeInput from '../../components/CodeInput';
 
-const PhoneNumberConfirmation = () => {
+const PhoneNumberConfirmation = ({route}) => {
   const navigation = useNavigation();
   const [code, setCode] = useState('');
   const [counterId, setCounterId] = useState(null);
+
+  const {phoneNumber} = route.params;
 
   return (
     <Container>
@@ -80,8 +82,8 @@ const PhoneNumberConfirmation = () => {
                 marginBottom: 2,
                 marginTop: 10,
               }}>
-              An OTP has been sent to your number ending in *4568 enter it to
-              reset your password
+              An OTP has been sent to your number ending in{' '}
+              {`*${phoneNumber.slice(-4)}`} enter it to reset your password
             </Text>
           </View>
 
