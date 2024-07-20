@@ -4,7 +4,14 @@ import {lightTheme} from '../theme/colors';
 import {DiagonalArrow, Eyes} from '../assets/svgs/General';
 import {eyes, light_eye} from '../assets/images';
 
-export const Cards = ({card, dark, cardInfo, accountNumber}) => {
+export const Cards = ({
+  card,
+  dark,
+  accountType,
+  walletName,
+  amount,
+  accountNumber,
+}) => {
   return (
     <View style={card}>
       <View
@@ -19,7 +26,11 @@ export const Cards = ({card, dark, cardInfo, accountNumber}) => {
               color: dark ? lightTheme.CHECK_BORDER : lightTheme.NEUTRAL_MAIN,
               fontSize: 16,
             }}>
-            {dark ? 'Balance' : cardInfo}
+            {dark
+              ? walletName
+                ? `Balance . ${walletName}`
+                : 'Balance'
+              : accountType}
           </Text>
           <View
             style={{
@@ -42,7 +53,7 @@ export const Cards = ({card, dark, cardInfo, accountNumber}) => {
                 fontSize: 32,
                 fontWeight: 700,
               }}>
-              0.00
+              {amount}
             </Text>
           </View>
         </View>

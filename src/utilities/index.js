@@ -20,3 +20,17 @@ export const getUser = async () => {
   let user = await AsyncStorage.getItem('user');
   return user;
 };
+
+export const formatAmount = (num = '', separator = ',') => {
+  if (num) {
+    const formattedNum = parseFloat(num).toFixed(2);
+
+    const withSeparator = formattedNum.replace(
+      /\B(?=(\d{3})+(?!\d))/g,
+      separator,
+    );
+
+    return `${withSeparator}`;
+  }
+  return '0.00';
+};

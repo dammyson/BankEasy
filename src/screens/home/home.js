@@ -11,7 +11,7 @@ import {
   Alert,
 } from 'react-native';
 import {lightTheme} from '../../theme/colors';
-import {font, transferHistory} from '../../constants';
+import {font} from '../../constants';
 import {Container, Content} from 'native-base';
 import {Icon} from '@rneui/themed';
 import {useNavigation} from '@react-navigation/native';
@@ -19,7 +19,7 @@ import {location, monie_point, no_transaction} from '../../assets/images';
 import {TransferList} from './transferList';
 import {Cards} from '../../components/Card';
 import {Location} from '../../assets/svgs/General';
-import {getToken} from '../../utilities';
+import {formatAmount, getToken} from '../../utilities';
 import {baseUrl, processResponse} from '../../utilities/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -37,6 +37,7 @@ const Home = () => {
   const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(false);
   const [profile, setProfile] = useState(null);
+  const [transferHistory, setTransferHistory] = useState([]);
 
   getToken().then(value => {
     setToken(value);
@@ -45,6 +46,7 @@ const Home = () => {
   useEffect(() => {
     if (token !== null) {
       getProfile();
+      getTransferHistory();
     }
   }, [token]);
 
@@ -81,6 +83,41 @@ const Home = () => {
         setLoading(false);
         Alert.alert(error.message);
         setProfile(null);
+      });
+  }, [token]);
+
+  const getTransferHistory = useCallback(() => {
+    setLoading(true);
+    fetch(baseUrl() + '/transfer/?pageNumber=1&pageSize=10', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then(processResponse)
+      .then(res => {
+        const {statusCode, data} = res;
+        if (statusCode === 200) {
+          setLoading(false);
+          setTransferHistory(data?.data.content);
+        } else if (statusCode === 422) {
+          setLoading(false);
+          Alert.alert('Validation failed', data?.message, [{text: 'Okay'}]);
+          setTransferHistory([]);
+        } else {
+          setLoading(false);
+          Alert.alert('Operation failed', data?.message, [{text: 'Okay'}]);
+          setTransferHistory([]);
+        }
+      })
+      .catch(error => {
+        console.log('Api call error');
+        console.warn(error);
+        setLoading(false);
+        Alert.alert(error.message);
+        setTransferHistory([]);
       });
   }, [token]);
 
@@ -154,12 +191,19 @@ const Home = () => {
           </View>
         </View>
       </View>
-      <Cards card={styles.card} dark={true} />
+      <Cards
+        amount={formatAmount(profile?.client?.balance) ?? 0.0}
+        card={styles.card}
+        dark={true}
+        walletName={profile?.client?.companyName ?? null}
+      />
       <View style={styles.transferContainer}>
         <View style={styles.transferHeader}>
           <Text style={{fontSize: 18, fontWeight: 600}}>Transfer History</Text>
           <TouchableOpacity
-            onPress={() => navigation.navigate('TransactionHistory')}
+            onPress={() =>
+              navigation.navigate('TransactionHistory', {token: token})
+            }
             style={{flexDirection: 'row', alignItems: 'center', gap: 2}}>
             <Text
               style={{color: lightTheme.ORANGE, fontSize: 14, fontWeight: 600}}>
@@ -178,11 +222,12 @@ const Home = () => {
           style={{
             marginTop: 15,
             borderTopWidth: 1,
-            borderColor: !transferHistory
-              ? 'transparent'
-              : lightTheme.BORDER_MAIN,
+            borderColor:
+              transferHistory?.length === 0
+                ? 'transparent'
+                : lightTheme.BORDER_MAIN,
           }}>
-          {!transferHistory ? (
+          {transferHistory?.length === 0 ? (
             <View style={styles.transferTable}>
               <Image
                 style={{
@@ -205,7 +250,7 @@ const Home = () => {
             </View>
           ) : (
             <View style={{marginBottom: 40}}>
-              {transferHistory.map((item, index) => (
+              {transferHistory?.map((item, index) => (
                 <TransferList key={index} item={item} />
               ))}
             </View>
