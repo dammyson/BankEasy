@@ -5,9 +5,12 @@ import {lightTheme} from '../../theme/colors';
 import {font} from '../../constants';
 import {useNavigation} from '@react-navigation/native';
 import {Incoming, Outgoing} from '../../assets/svgs/General';
+import dayjs from 'dayjs';
+import advancedFormat from 'dayjs/plugin/advancedFormat';
 
 export const TransferList = ({item}) => {
   const navigation = useNavigation();
+  dayjs.extend(advancedFormat);
   return (
     <TouchableOpacity
       onPress={() => navigation.navigate('TransactionDetails', {detail: item})}
@@ -19,7 +22,7 @@ export const TransferList = ({item}) => {
         borderColor: lightTheme.BORDER_MAIN,
         height: 85,
       }}>
-      {item.type === 'debit' ? <Outgoing /> : <Incoming />}
+      {item.type === 'FUND_TRANSFER_DEBIT' ? <Outgoing /> : <Incoming />}
       <View
         style={{
           marginLeft: 20,
@@ -32,7 +35,9 @@ export const TransferList = ({item}) => {
             fontWeight: 500,
             marginBottom: 2,
           }}>
-          {item.type === 'debit' ? 'Transfer to' : 'Transfer from'}
+          {item.type === 'FUND_TRANSFER_DEBIT'
+            ? 'Transfer to'
+            : 'Transfer from'}
         </Text>
         <Text
           numberOfLines={1}
@@ -44,29 +49,25 @@ export const TransferList = ({item}) => {
               flexShrink: 1,
             },
           ]}>
-          {item.name}
+          {item.type === 'FUND_TRANSFER_DEBIT'
+            ? item.toAccount + '' + item.toBank
+            : item.fromAccount + '' + item.fromBank}
         </Text>
         <View style={{flexDirection: 'row', gap: 5, alignItems: 'center'}}>
           <Text style={{color: lightTheme.NEUTRAL_MAIN, marginVertical: 2}}>
-            {item.date}
-          </Text>
-          <Text style={{color: lightTheme.NEUTRAL_MAIN, marginVertical: 2}}>
-            .
-          </Text>
-          <Text style={{color: lightTheme.NEUTRAL_MAIN, marginVertical: 2}}>
-            {item.time}
+            {dayjs(item.dateCreated).format('Do MMM, YYYY . h:mm A')}
           </Text>
         </View>
         <Text
           style={{
             color:
-              item.type === 'debit'
+              item.type === 'FUND_TRANSFER_DEBIT'
                 ? lightTheme.TEXT_RED
                 : lightTheme.SUCCESS_COLOR,
             fontSize: 18,
             fontWeight: 600,
           }}>
-          {item.type === 'debit' ? '- ₦ ' : '+ ₦ '}
+          {item.type === 'FUND_TRANSFER_DEBIT' ? '- ₦ ' : '+ ₦ '}
           {item.amount}
         </Text>
       </View>

@@ -135,7 +135,7 @@ const Profile = () => {
               fontWeight: 600,
               color: lightTheme.BLACK_TEXT_COLOR,
             }}>
-            {user.firstName} {user?.lastName}
+            {user?.firstName} {user?.lastName}
           </Text>
         </View>
       )}
@@ -148,7 +148,7 @@ const Profile = () => {
                 borderRadius: 15,
                 marginBottom: 20,
               }}>
-              {items.top.map((item, index) => (
+              {items?.top.map((item, index) => (
                 <List
                   key={index}
                   onPress={() => {
@@ -168,7 +168,7 @@ const Profile = () => {
                 borderRadius: 15,
                 marginBottom: 20,
               }}>
-              {items.biometric.map(item => (
+              {items?.biometric.map(item => (
                 <List item={item} />
               ))}
             </View>
@@ -178,7 +178,7 @@ const Profile = () => {
                 borderRadius: 15,
                 marginBottom: 20,
               }}>
-              {items.last.map(item => (
+              {items?.last.map(item => (
                 <List
                   onPress={() => navigation.navigate(item.page)}
                   item={item}
@@ -219,31 +219,31 @@ const Profile = () => {
                 <Rows
                   textClass={{color: lightTheme.NEUTRAL_300}}
                   description={'BVN'}
-                  boldValue={'225236738'}
+                  boldValue={user?.client?.bvn ?? '---'}
                   height={70}
                 />
                 <Rows
                   textClass={{color: lightTheme.NEUTRAL_300}}
                   description={'Username'}
-                  boldValue={'Jerajuruchukwu'}
+                  boldValue={user?.username ?? '---'}
                   height={70}
                 />
                 <Rows
                   textClass={{color: lightTheme.NEUTRAL_300}}
                   description={'Phone Number'}
-                  boldValue={'08082739907'}
+                  boldValue={user?.phoneNumber ?? '---'}
                   height={70}
                 />
                 <Rows
                   textClass={{color: lightTheme.NEUTRAL_300}}
                   description={'Account Number'}
-                  boldValue={'0944403799'}
+                  boldValue={user?.client?.accountNumber ?? '---'}
                   height={70}
                 />
                 <Rows
                   textClass={{color: lightTheme.NEUTRAL_300}}
                   description={'Account Name'}
-                  boldValue={'Jerome ajuruchukwu'}
+                  boldValue={user?.firstName + ' ' + user?.lastName ?? '---'}
                   height={70}
                 />
                 <Rows

@@ -105,7 +105,7 @@ const Industry = ({route}) => {
             <Cards
               card={styles.card}
               dark={false}
-              cardInfo={'Savings account'}
+              accountType={'Savings account'}
               accountNumber={'0800509703'}
             />
           </View>

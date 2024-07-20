@@ -15,6 +15,7 @@ import {useNavigation} from '@react-navigation/native';
 import {dark_logo} from '../../assets/images';
 import {Rows} from './rows';
 import {List} from '../profile/list';
+import {formatAmount} from '../../utilities';
 
 const defaultAuthState = {
   hasLoggedInOnce: false,
@@ -88,17 +89,19 @@ const TransactionDetails = ({route}) => {
           <Text
             style={{
               color:
-                detail.type === 'debit'
+                detail.type === 'FUND_TRANSFER_DEBIT'
                   ? lightTheme.TEXT_RED
                   : lightTheme.SUCCESS_COLOR,
               fontSize: 30,
-              fontWeight: 700,
+              fontFamily: font.BOLD,
               marginTop: 1,
               textAlign: 'center',
               marginBottom: 30,
             }}>
-            {detail.type === 'debit' ? '- ₦ ' : '+ ₦ '}
-            {detail.amount}
+            <Text style={{fontSize: 24, fontFamily: font.MEDIUM}}>
+              {detail.type === 'FUND_TRANSFER_DEBIT' ? '- ₦ ' : '+ ₦ '}
+            </Text>
+            {formatAmount(detail.amount)}
           </Text>
           <View
             style={{borderTopWidth: 1, borderColor: lightTheme.BORDER_MAIN}}>
@@ -113,14 +116,14 @@ const TransactionDetails = ({route}) => {
               <Rows
                 description={'From'}
                 boldValue={detail.sender}
-                lightValue={detail.accountNumber}
+                lightValue={detail.fromAccount}
               />
-              <Rows description={'To'} boldValue={detail.recipient} />
+              <Rows description={'To'} boldValue={detail.toAccount} />
               <Rows description={'Narration'} boldValue={detail.narration} />
               <Rows description={'Reference'} boldValue={'323rkkkadweqri'} />
               <Rows
                 description={'Total amount'}
-                boldValue={'₦' + detail.amount}
+                boldValue={'₦' + formatAmount(detail.amount)}
               />
             </View>
             <View
