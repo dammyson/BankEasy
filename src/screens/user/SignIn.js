@@ -122,7 +122,7 @@ const SignIn = ({route}) => {
           .catch(error => {
             console.log('Api call error');
             console.warn(error);
-            Alert(error.message);
+            Alert.alert(error.message);
             AsyncStorage.setItem('token', '');
             dispatch(HIDE_LOADER());
           });

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {
   View,
   Text,
@@ -6,6 +6,7 @@ import {
   StyleSheet,
   StatusBar,
   Image,
+  Alert,
 } from 'react-native';
 import {lightTheme} from '../../theme/colors';
 import {font} from '../../constants';
@@ -13,13 +14,13 @@ import {Container, Content} from 'native-base';
 import {Icon} from '@rneui/themed';
 import {useNavigation} from '@react-navigation/native';
 import {dark_logo} from '../../assets/images';
-import {Rows} from './rows';
-import {List} from '../profile/list';
 import {Cards} from '../../components/Card';
 import {Select} from '../../components/Select';
 import {CustomInput} from '../../components/CustomInput';
 import {buttonStyles} from '../../theme/ButtonStyle';
 import LinearGradient from 'react-native-linear-gradient';
+import {formatAmount, getUser} from '../../utilities';
+import {baseUrl, processResponse} from '../../utilities/api';
 
 const defaultAuthState = {
   hasLoggedInOnce: false,
@@ -30,27 +31,113 @@ const defaultAuthState = {
 };
 
 const TransactionInputDetails = ({route}) => {
-  const [index, setIndex] = useState(0);
   const [bank, setBank] = useState('');
   const [acctNumber, setAcctNumber] = useState('');
   const navigation = useNavigation();
   const [amount, setAmount] = useState();
   const [narration, setNarration] = useState('');
+  const [user, setUser] = useState(null);
+  const [banks, setBanks] = useState([]);
+  const [loadingBanks, setLoadingBanks] = useState(false);
+  const [accountName, setAccountName] = useState('');
+  const [loadingName, setLoadingName] = useState(false);
+  const {name, type, token} = route.params;
 
-  const {name, type} = route.params;
+  getUser().then(value => {
+    setUser(JSON.parse(value));
+  });
 
-  const data = [
-    {label: 'Access bank', value: 'access'},
-    {label: 'Eco bank', value: 'eco'},
-    {label: 'Fidelity bank', value: 'fidelity'},
-    {label: 'Wema bank', value: 'wema'},
-  ];
+  useEffect(() => {
+    if (token !== null) {
+      getBanks();
+    }
+  }, [token]);
 
   const getValue = param => {
+    if (param.length === 10 && type === 'others') {
+      getAccountName(param);
+    }
     setAcctNumber(param);
   };
   const getAmount = param => {
     setAmount(param);
+  };
+
+  const getBanks = () => {
+    setLoadingBanks(true);
+    fetch(baseUrl() + '/transfer/get-bank-codes', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then(processResponse)
+      .then(res => {
+        const {statusCode, data} = res;
+        if (statusCode === 200) {
+          setLoadingBanks(false);
+          setBanks(data?.data);
+        } else if (statusCode === 422) {
+          setLoadingBanks(false);
+          Alert.alert('Validation failed', data?.message, [{text: 'Okay'}]);
+        } else {
+          setLoadingBanks(false);
+          Alert.alert('Operation failed', data?.message, [{text: 'Okay'}]);
+        }
+      })
+      .catch(error => {
+        console.log('Api call error');
+        console.warn(error);
+        setLoadingBanks(false);
+        Alert.alert(error.message);
+      });
+  };
+
+  const data = useMemo(() => {
+    const banksData = banks?.map(bank => ({
+      label: bank.name,
+      value: bank.bankCode,
+    }));
+    return banksData;
+  }, [banks]);
+
+  const getAccountName = param => {
+    setLoadingName(true);
+    let nameData = JSON.stringify({
+      accountNumber: param,
+      bankCode: bank,
+    });
+
+    fetch(baseUrl() + '/transfer/name-enquiry', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      body: nameData,
+    })
+      .then(processResponse)
+      .then(res => {
+        const {statusCode, data} = res;
+        console.warn(res);
+        if (statusCode === 200) {
+          setLoadingName(false);
+        } else if (statusCode === 422) {
+          setLoadingName(false);
+          Alert.alert('Validation failed', data?.message, [{text: 'Okay'}]);
+        } else {
+          setLoadingName(false);
+          Alert.alert('Operation Failed', data?.message[{text: 'Okay'}]);
+        }
+      })
+      .catch(error => {
+        console.log('Api call error');
+        console.warn(error);
+        setLoadingName(false);
+        Alert.alert(error.message);
+      });
   };
 
   return (
@@ -108,9 +195,10 @@ const TransactionInputDetails = ({route}) => {
           <View style={{marginTop: 20}}>
             <Cards
               card={styles.card}
+              amount={formatAmount(user?.client.balance) ?? 0.0}
               dark={false}
               accountType={'Savings account'}
-              accountNumber={'0800509703'}
+              accountNumber={user?.client.accountNumber}
             />
           </View>
           <View style={{marginTop: 10}}>
@@ -121,15 +209,17 @@ const TransactionInputDetails = ({route}) => {
                 handleSelect={param => setBank(param)}
                 placeholder={'Select the bank'}
                 label={'Select bank'}
-                search={false}
+                search={true}
               />
             )}
             <CustomInput
               label={'Account Number'}
               placeholder={'Enter account number'}
-              extras={'Account number'}
+              extras={loadingName ? '...' : accountName ? accountName : ''}
               value={acctNumber}
               getValue={getValue}
+              editable={type === 'others' ? (bank === '' ? false : true) : true}
+              maxLength={10}
             />
             <CustomInput
               label={'Amount'}
@@ -140,13 +230,22 @@ const TransactionInputDetails = ({route}) => {
             <CustomInput
               label={'Narration'}
               placeholder={'Enter Narration'}
-              value={amount}
+              value={narration}
               getValue={text => setNarration(text)}
             />
             <View style={{marginVertical: 50}}>
               <TouchableOpacity
                 onPress={() =>
-                  navigation.navigate('TransactionConfirmation', {type: type})
+                  navigation.navigate('TransactionConfirmation', {
+                    type: type,
+                    accountNumber: acctNumber,
+                    amount: parseInt(amount),
+                    narration: narration,
+                    bankCode: bank,
+                    beneficiaryName: accountName,
+                    clientId: user?.client.id,
+                    personalAccount: user?.client.accountNumber,
+                  })
                 }>
                 <LinearGradient
                   colors={['#4A463C', '#232323']}

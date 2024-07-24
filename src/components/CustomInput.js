@@ -27,6 +27,8 @@ export const CustomInput = ({
   mainClass,
   onIconPress,
   secureTextEntry,
+  editable,
+  maxLength,
 }) => {
   return (
     <View style={mainClass ?? {marginVertical: 15, position: 'relative'}}>
@@ -78,6 +80,8 @@ export const CustomInput = ({
         returnKeyType="next"
         keyboardType={type ?? 'default'}
         autoCapitalize="none"
+        editable={editable}
+        maxLength={maxLength}
       />
       {extras && (
         <Text

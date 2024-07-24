@@ -265,13 +265,13 @@ export default Profile;
 
 const items = {
   top: [
-    {
-      name: 'Beneficiaries',
-      icon_name: 'clipboard-text-outline',
-      icon_type: 'material-community',
-      number: '40',
-      page: 'Beneficiaries',
-    },
+    // {
+    //   name: 'Beneficiaries',
+    //   icon_name: 'clipboard-text-outline',
+    //   icon_type: 'material-community',
+    //   number: '40',
+    //   page: 'Beneficiaries',
+    // },
     {
       name: 'Reset Pin',
       icon_name: 'lock-outline',
