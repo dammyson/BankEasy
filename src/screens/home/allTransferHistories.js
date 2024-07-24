@@ -75,8 +75,6 @@ const TransactionHistory = ({route}) => {
       });
   }, [token]);
 
-  console.warn(transferHistory);
-
   return (
     <Container style={{backgroundColor: lightTheme.WHITE_COLOR}}>
       <View style={{backgroundColor: lightTheme.CREAM, height: 60}} />

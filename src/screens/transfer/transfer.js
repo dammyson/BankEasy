@@ -15,6 +15,7 @@ import {Container, Content} from 'native-base';
 import {Icon} from '@rneui/themed';
 import {useNavigation} from '@react-navigation/native';
 import {bank, mini_logo} from '../../assets/images';
+import {getToken} from '../../utilities';
 
 const defaultAuthState = {
   hasLoggedInOnce: false,
@@ -27,6 +28,11 @@ const defaultAuthState = {
 const Transfer = () => {
   const [index, setIndex] = useState(0);
   const navigation = useNavigation();
+  const [token, setToken] = useState(null);
+
+  getToken().then(value => {
+    setToken(value);
+  });
 
   return (
     <Container style={{backgroundColor: lightTheme.WHITE_COLOR}}>
@@ -86,6 +92,7 @@ const Transfer = () => {
                   navigation.navigate('TransferInputDetails', {
                     name: 'Bank easy transfer',
                     type: 'in-bank',
+                    token: token,
                   })
                 }
                 style={[styles.banksBlock, styles.bankEasyBlock]}>
@@ -118,6 +125,7 @@ const Transfer = () => {
                   navigation.navigate('TransferInputDetails', {
                     name: 'Other banks transfer',
                     type: 'others',
+                    token: token,
                   })
                 }
                 style={[styles.banksBlock, styles.otherBanksBlock]}>

@@ -7,6 +7,7 @@ import {
   StatusBar,
   Image,
   Dimensions,
+  Alert,
 } from 'react-native';
 import {lightTheme} from '../../theme/colors';
 import {font} from '../../constants';
@@ -16,6 +17,7 @@ import {useNavigation} from '@react-navigation/native';
 import {dark_logo} from '../../assets/images';
 import {buttonStyles} from '../../theme/ButtonStyle';
 import PinInput from '../../components/PinInput';
+import {baseUrl, processResponse} from '../../utilities/api';
 
 const defaultAuthState = {
   hasLoggedInOnce: false,
@@ -30,10 +32,52 @@ const TransferAuthentication = () => {
   const navigation = useNavigation();
   const [pin, setPin] = useState('');
   const [confirmPin, setConfirmPin] = useState('');
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (pin.length === 6) setMode('confirm');
   }, [pin]);
+
+  const processTransfer = param => {
+    setLoading(true);
+    let nameData = JSON.stringify({
+      clientId: 0,
+      accountNumber: 'string',
+      amount: 0,
+      narration: 'string',
+      transactionPin: 'string',
+      transactionReference: 'string',
+    });
+
+    fetch(baseUrl() + '/transfer/internal/process', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      body: nameData,
+    })
+      .then(processResponse)
+      .then(res => {
+        const {statusCode, data} = res;
+        console.warn(res);
+        if (statusCode === 200) {
+          setLoading(false);
+        } else if (statusCode === 422) {
+          setLoading(false);
+          Alert.alert('Validation failed', data?.message, [{text: 'Okay'}]);
+        } else {
+          setLoading(false);
+          Alert.alert('Operation Failed', data?.message[{text: 'Okay'}]);
+        }
+      })
+      .catch(error => {
+        console.log('Api call error');
+        console.warn(error);
+        setLoading(false);
+        Alert.alert(error.message);
+      });
+  };
 
   return (
     <Container style={{backgroundColor: lightTheme.WHITE_COLOR}}>

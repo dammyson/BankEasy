@@ -6,6 +6,7 @@ import {
   StyleSheet,
   StatusBar,
   Image,
+  Alert,
 } from 'react-native';
 import {Container, Content} from 'native-base';
 import {Icon} from '@rneui/themed';
@@ -16,6 +17,8 @@ import {dark_logo} from '../../assets/images';
 import {Rows} from '../home/rows';
 import LinearGradient from 'react-native-linear-gradient';
 import {buttonStyles} from '../../theme/ButtonStyle';
+import {baseUrl, processResponse} from '../../utilities/api';
+import {formatAmount} from '../../utilities';
 
 const defaultAuthState = {
   hasLoggedInOnce: false,
@@ -28,8 +31,18 @@ const defaultAuthState = {
 const TransactionConfirmation = ({route}) => {
   const [index, setIndex] = useState(0);
   const navigation = useNavigation();
+  const [loading, setLoading] = useState(false);
 
-  const {type} = route.params;
+  const {
+    type,
+    accountNumber,
+    amount,
+    narration,
+    bankCode,
+    beneficiaryName,
+    clientId,
+    personalAccount,
+  } = route.params;
 
   const detail = {
     category:
@@ -47,7 +60,7 @@ const TransactionConfirmation = ({route}) => {
     icon_type: 'feather',
     sender: 'Deji Adeyemi',
     accountNumber: '0800509703',
-    commission: '8,000',
+    commission: 8000,
     recipient: 'Bunmi Felix',
     narration: 'Reimbursement',
   };
@@ -116,7 +129,7 @@ const TransactionConfirmation = ({route}) => {
               textAlign: 'center',
               marginBottom: 30,
             }}>
-            ₦ {detail.amount}
+            ₦ {formatAmount(amount)}
           </Text>
           <View
             style={{borderTopWidth: 1, borderColor: lightTheme.BORDER_MAIN}}>
@@ -142,7 +155,7 @@ const TransactionConfirmation = ({route}) => {
                     fontFamily: font.BOLD,
                     marginVertical: 2,
                   }}>
-                  3446573800
+                  {personalAccount}
                 </Text>
                 <Text
                   style={{
@@ -171,7 +184,7 @@ const TransactionConfirmation = ({route}) => {
                     textAlign: 'right',
                     marginVertical: 2,
                   }}>
-                  3445373800
+                  {accountNumber}
                 </Text>
                 <Text
                   style={{
@@ -193,7 +206,7 @@ const TransactionConfirmation = ({route}) => {
               }}>
               <Rows
                 description={'Source account'}
-                boldValue={detail.accountNumber}
+                boldValue={accountNumber}
                 textClass={{
                   color: lightTheme.NEUTRAL_MAIN,
                   fontFamily: font.REGULAR,
@@ -224,7 +237,7 @@ const TransactionConfirmation = ({route}) => {
                         fontFamily: font.REGULAR,
                       }}
                       description={'Commission'}
-                      boldValue={'₦' + detail.commission}
+                      boldValue={'₦' + formatAmount(detail.commission)}
                     />
                   </>
                 ))}
@@ -234,7 +247,7 @@ const TransactionConfirmation = ({route}) => {
                   fontFamily: font.REGULAR,
                 }}
                 description={'Total amount'}
-                boldValue={'₦' + detail.amount}
+                boldValue={`₦ ${formatAmount(amount + detail.commission)}`}
                 noBorder
               />
             </View>
@@ -243,7 +256,18 @@ const TransactionConfirmation = ({route}) => {
       </Content>
       <View style={{marginHorizontal: 20, marginBottom: 100}}>
         <TouchableOpacity
-          onPress={() => navigation.navigate('TransferAuthentication')}>
+          onPress={() =>
+            navigation.navigate('TransferAuthentication', {
+              type: type,
+              accountNumber: accountNumber,
+              amount: amount,
+              narration: narration,
+              bankCode: bankCode,
+              beneficiaryName: beneficiaryName,
+              clientId: clientId,
+              personalAccount: personalAccount,
+            })
+          }>
           <LinearGradient
             colors={['#4A463C', '#232323']}
             useAngle={true}
