@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   Text,
   StyleSheet,
@@ -13,16 +13,17 @@ import {
 import {lightTheme} from '../../theme/colors';
 import {useNavigation} from '@react-navigation/native';
 import {Icon} from '@rneui/themed';
-import {signin} from '../../assets/images';
+import {mini_logo, signin} from '../../assets/images';
 import {buttonStyles} from '../../theme/ButtonStyle';
 import {font} from '../../constants';
 import {Container, Content} from 'native-base';
 import {textInputStyles} from '../../theme/TextInputStyle';
 import Checkbox from '../../components/CheckBox';
-import {HIDE_LOADER, SHOW_LOADER} from '../../actions/loaderAction';
+import * as Animatable from 'react-native-animatable';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {baseUrl, processResponse} from '../../utilities/api';
 import {useDispatch} from 'react-redux';
+import {CustomLoader} from '../../components/CustomLoader';
 
 const SignIn = ({route}) => {
   const navigation = useNavigation();
@@ -32,6 +33,7 @@ const SignIn = ({route}) => {
   const [phone, setPhone] = useState('');
   const [isValidMail, setIsValidMail] = useState(false);
   const [isValidPhone, setIsValidPhone] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -72,7 +74,7 @@ const SignIn = ({route}) => {
           {text: 'Okay'},
         ]);
       } else {
-        dispatch(SHOW_LOADER('Signing in'));
+        setLoading(true);
 
         let emailData = JSON.stringify({
           email: email,
@@ -97,10 +99,9 @@ const SignIn = ({route}) => {
         })
           .then(processResponse)
           .then(res => {
-            dispatch(HIDE_LOADER());
-
             const {statusCode, data} = res;
             if (statusCode === 200) {
+              setLoading(false);
               setEmail('');
               setPassword('');
               setPhone('');
@@ -108,9 +109,11 @@ const SignIn = ({route}) => {
               navigation.navigate('Home');
               setIsValidMail(false);
             } else if (statusCode === 422) {
+              setLoading(false);
               Alert.alert('Validation failed', data.message, [{text: 'Okay'}]);
               AsyncStorage.setItem('token', '');
             } else {
+              setLoading(false);
               Alert.alert(
                 data?.message,
                 'Please check your email or password and retry',
@@ -122,9 +125,9 @@ const SignIn = ({route}) => {
           .catch(error => {
             console.log('Api call error');
             console.warn(error);
+            setLoading(false);
             Alert.alert(error.message);
             AsyncStorage.setItem('token', '');
-            dispatch(HIDE_LOADER());
           });
       }
     }
@@ -133,161 +136,166 @@ const SignIn = ({route}) => {
   return (
     <Container>
       <StatusBar backgroundColor="transparent" barStyle="dark-content" />
-
-      <Image
-        style={{
-          height: Dimensions.get('window').height / 3,
-          width: Dimensions.get('window').width,
-        }}
-        source={signin}
-      />
-      <Content>
-        <View style={styles.container}>
-          <View
+      {loading ? (
+        <CustomLoader loading={loading} />
+      ) : (
+        <>
+          <Image
             style={{
-              marginLeft: 20,
-              marginRight: 20,
-              justifyContent: 'center',
-              alignItems: 'center',
-              marginBottom: 15,
-              marginTop: 20,
-            }}>
-            <Text
-              style={{
-                color: lightTheme.BLACK_TEXT_COLOR,
-                fontFamily: font.BOLD,
-                fontSize: 24,
-                marginBottom: 2,
-                marginTop: 2,
-              }}>
-              Welcome!
-            </Text>
-            <Text
-              style={{
-                color: lightTheme.BLACK_TEXT_COLOR,
-                fontFamily: font.REGULAR,
-                fontSize: 16,
-                marginBottom: 2,
-                marginTop: 10,
-              }}>
-              Enjoy easy banking by signing In
-            </Text>
-          </View>
-
-          <View style={{flex: 1}}>
-            <View
-              style={{
-                marginLeft: 20,
-                marginRight: 20,
-                justifyContent: 'flex-start',
-              }}>
-              <Text style={styles.inputLabel}>Email/Phone Number </Text>
-            </View>
-
-            <View style={styles.textInputContainer}>
-              <View style={styles.input}>
-                <TextInput
-                  placeholder="Enter your Email or Phone Number "
-                  placeholderTextColor={lightTheme.PRIMARY_TEXT_COLOR}
-                  returnKeyType="next"
-                  keyboardType="default"
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  defaultValue={email}
+              height: Dimensions.get('window').height / 3,
+              width: Dimensions.get('window').width,
+            }}
+            source={signin}
+          />
+          <Content>
+            <View style={styles.container}>
+              <View
+                style={{
+                  marginLeft: 20,
+                  marginRight: 20,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginBottom: 15,
+                  marginTop: 20,
+                }}>
+                <Text
                   style={{
-                    flex: 1,
-                    fontSize: 14,
-                    color: lightTheme.PRIMARY_TEXT_COLOR,
-                    fontFamily: font.REGULAR,
-                  }}
-                  onChangeText={text => validate(text)}
-                />
-              </View>
-              <View style={textInputStyles.operation_icon}>
-                <Icon
-                  name="phone-outline"
-                  type="material-community"
-                  color="grey"
-                  size={20}
-                />
-              </View>
-            </View>
-
-            <View
-              style={{
-                marginLeft: 20,
-                marginRight: 20,
-                justifyContent: 'flex-start',
-              }}>
-              <Text style={styles.inputLabel}>Password </Text>
-            </View>
-
-            <View style={styles.textInputContainer}>
-              <View style={styles.input}>
-                <TextInput
-                  placeholder="Enter your Password"
-                  placeholderTextColor={lightTheme.PRIMARY_TEXT_COLOR}
-                  returnKeyType="next"
-                  keyboardType="default"
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  defaultValue={password}
-                  style={{
-                    flex: 1,
-                    fontSize: 14,
-                    color: lightTheme.PRIMARY_TEXT_COLOR,
-                    fontFamily: font.REGULAR,
-                  }}
-                  onChangeText={text => setPassword(text)}
-                />
-              </View>
-              <View style={textInputStyles.operation_icon}>
-                <Icon
-                  name="eye-outline"
-                  type="material-community"
-                  color="grey"
-                  size={20}
-                />
-              </View>
-            </View>
-            <View
-              style={{
-                marginRight: 20,
-                marginLeft: 20,
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-              }}>
-              <Checkbox
-                isChecked={checked}
-                text="Remember password"
-                onPress={() => setChecked(!checked)}
-              />
-              <TouchableOpacity
-                onPress={() => navigation.navigate('ForgotPassword')}>
-                <Text style={{color: lightTheme.ORANGE, fontWeight: 500}}>
-                  Forgot Password
+                    color: lightTheme.BLACK_TEXT_COLOR,
+                    fontFamily: font.BOLD,
+                    fontSize: 24,
+                    marginBottom: 2,
+                    marginTop: 2,
+                  }}>
+                  Welcome!
                 </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
+                <Text
+                  style={{
+                    color: lightTheme.BLACK_TEXT_COLOR,
+                    fontFamily: font.REGULAR,
+                    fontSize: 16,
+                    marginBottom: 2,
+                    marginTop: 10,
+                  }}>
+                  Enjoy easy banking by signing In
+                </Text>
+              </View>
 
-          <View
-            style={{
-              marginLeft: 20,
-              marginRight: 20,
-              marginBottom: 10,
-            }}>
-            <TouchableOpacity
-              onPress={() => signInRequest()}
-              style={[buttonStyles.primaryButtonStyle]}>
-              <Text style={[buttonStyles.primaryActionButtonTextStyle]}>
-                Sign In
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Content>
+              <View style={{flex: 1}}>
+                <View
+                  style={{
+                    marginLeft: 20,
+                    marginRight: 20,
+                    justifyContent: 'flex-start',
+                  }}>
+                  <Text style={styles.inputLabel}>Email/Phone Number </Text>
+                </View>
+
+                <View style={styles.textInputContainer}>
+                  <View style={styles.input}>
+                    <TextInput
+                      placeholder="Enter your Email or Phone Number "
+                      placeholderTextColor={lightTheme.PRIMARY_TEXT_COLOR}
+                      returnKeyType="next"
+                      keyboardType="default"
+                      autoCapitalize="none"
+                      autoCorrect={false}
+                      defaultValue={email}
+                      style={{
+                        flex: 1,
+                        fontSize: 14,
+                        color: lightTheme.PRIMARY_TEXT_COLOR,
+                        fontFamily: font.REGULAR,
+                      }}
+                      onChangeText={text => validate(text)}
+                    />
+                  </View>
+                  <View style={textInputStyles.operation_icon}>
+                    <Icon
+                      name="phone-outline"
+                      type="material-community"
+                      color="grey"
+                      size={20}
+                    />
+                  </View>
+                </View>
+
+                <View
+                  style={{
+                    marginLeft: 20,
+                    marginRight: 20,
+                    justifyContent: 'flex-start',
+                  }}>
+                  <Text style={styles.inputLabel}>Password </Text>
+                </View>
+
+                <View style={styles.textInputContainer}>
+                  <View style={styles.input}>
+                    <TextInput
+                      placeholder="Enter your Password"
+                      placeholderTextColor={lightTheme.PRIMARY_TEXT_COLOR}
+                      returnKeyType="next"
+                      keyboardType="default"
+                      autoCapitalize="none"
+                      autoCorrect={false}
+                      defaultValue={password}
+                      style={{
+                        flex: 1,
+                        fontSize: 14,
+                        color: lightTheme.PRIMARY_TEXT_COLOR,
+                        fontFamily: font.REGULAR,
+                      }}
+                      onChangeText={text => setPassword(text)}
+                    />
+                  </View>
+                  <View style={textInputStyles.operation_icon}>
+                    <Icon
+                      name="eye-outline"
+                      type="material-community"
+                      color="grey"
+                      size={20}
+                    />
+                  </View>
+                </View>
+                <View
+                  style={{
+                    marginRight: 20,
+                    marginLeft: 20,
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}>
+                  <Checkbox
+                    isChecked={checked}
+                    text="Remember password"
+                    onPress={() => setChecked(!checked)}
+                  />
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate('ForgotPassword')}>
+                    <Text style={{color: lightTheme.ORANGE, fontWeight: 500}}>
+                      Forgot Password
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+
+              <View
+                style={{
+                  marginLeft: 20,
+                  marginRight: 20,
+                  marginBottom: 10,
+                }}>
+                <TouchableOpacity
+                  onPress={() => signInRequest()}
+                  style={[buttonStyles.primaryButtonStyle]}>
+                  <Text style={[buttonStyles.primaryActionButtonTextStyle]}>
+                    Sign In
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Content>
+        </>
+      )}
     </Container>
   );
 };
